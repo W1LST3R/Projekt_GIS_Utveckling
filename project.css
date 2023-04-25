@@ -3,3 +3,6 @@ html, body, #mapDiv {
   margin:0px;
   height:100%;
 }
+#mapDiv{
+  z-index: -1;
+}

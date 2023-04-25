@@ -43,7 +43,7 @@ function getBikingWalkingNoElevation(){
 function showStops(poiData) {
     var poiLayer = new esri.layers.GraphicsLayer();
     map.addLayer(poiLayer);
-    var symbol = new SimpleMarkerSymbol(),setStyle(SimpleMarkerSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
+    var symbol = new esri.symbol.SimpleMarkerSymbol(),setStyle(SimpleMarkerSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
 	
     dojo.forEach(poiData.posts, function(posts){
         var lng = longitude;

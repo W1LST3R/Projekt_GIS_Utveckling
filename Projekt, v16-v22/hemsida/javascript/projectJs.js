@@ -39,6 +39,20 @@ function getBikingWalkingNoElevation(){
 	dojo.xhrGet(poiData);
 }
 
+function showStops(poiData) {
+    var poiLayer = new esri.layers.GraphicsLayer();
+    map.addLayer(poiLayer);
+    var symbol = new esri.symbol.PictureMarkerSymbol('xx.png', 6, 6);
+	
+    dojo.forEach(poiData.posts, function(posts){
+        var lng = longitude;
+        var lat = latitude;
+		var point = new esri.geometry.Point(Number(lng), Number(lat))
+        var Graphic = new esri.Graphic(point, symbol).setInfoTemplate(new esri.InfoTemplate("Busshållplats", name));
+        poiLayer.add(Graphic);
+    });
+}
+
 function makePoi() {
 	var poiLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(poiLayer);

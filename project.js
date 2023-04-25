@@ -1,5 +1,5 @@
 require(["esri/map","esri/layers/Graphic", "esri/InfoTemplate","esri/geometry/Point",
-"esri/symbols/PictureMarkerSymbol","esri/graphic","esri/Color","dojo/domReady!"],
+"esri/symbols/PictureMarkerSymbol","esri/symbols/SimpleMarkerSymbol","esri/symbols/SimpleFillSymbol","esri/graphic","esri/Color","dojo/domReady!"],
 	function(Map, GraphicsLayer){
 		map = new Map("mapDiv",{
       			basemap: "streets",
@@ -11,7 +11,7 @@ require(["esri/map","esri/layers/Graphic", "esri/InfoTemplate","esri/geometry/Po
 	getBikingWalkingNoElevation();
 	
 	}
-};
+);
 
 function getbiking_walking_with_elevation(){
 }
@@ -45,7 +45,7 @@ function getBikingWalkingNoElevation(){
 function showStops(poiData) {
     var poiLayer = new esri.layers.GraphicsLayer();
     map.addLayer(poiLayer);
-    var symbol = new SimplrSymbol(),setStyle(SimpleSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
+    var symbol = new SimpleSymbol(),setStyle(SimpleSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
 	
     dojo.forEach(poiData.posts, function(posts){
         var lng = longitude;

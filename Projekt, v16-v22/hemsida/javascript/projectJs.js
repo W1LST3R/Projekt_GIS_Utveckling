@@ -5,12 +5,10 @@ require(["esri/map","esri/layers/Graphic", "esri/InfoTemp","esri/geometry/Point"
       			basemap: "streets",
       			center: [60.208251508,17.923597762],
       			zoom: 14
-    		});
-	
+    		});	
 	var graphics = new GraphicsLayer();
 	map.addLayer(graphics);
-	}
-};
+});
 
 function getbiking_walking_with_elevation
 	

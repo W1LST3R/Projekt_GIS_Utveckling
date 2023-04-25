@@ -8,6 +8,7 @@ require(["esri/map","esri/layers/Graphic", "esri/InfoTemp","esri/geometry/Point"
     		});	
 	var graphics = new GraphicsLayer();
 	map.addLayer(graphics);
+	getBikingWalkingNoElevation();
 });
 
 function getbiking_walking_with_elevation(){
@@ -42,13 +43,13 @@ function getBikingWalkingNoElevation(){
 function showStops(poiData) {
     var poiLayer = new esri.layers.GraphicsLayer();
     map.addLayer(poiLayer);
-    var symbol = new esri.symbol.PictureMarkerSymbol('xx.png', 6, 6);
+    var symbol = new SimplrSymbol(),setStyle(SimpleSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
 	
     dojo.forEach(poiData.posts, function(posts){
         var lng = longitude;
         var lat = latitude;
-		var point = new esri.geometry.Point(Number(lng), Number(lat))
-        var Graphic = new esri.Graphic(point, symbol).setInfoTemplate(new esri.InfoTemplate("Busshållplats", name));
+	var point = new esri.geometry.Point(Number(lng), Number(lat))
+        var Graphic = new esri.Graphic(point, symbol).setInfoTemplate(new esri.InfoTemplate("POI"));
         poiLayer.add(Graphic);
     });
 }

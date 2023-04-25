@@ -1,4 +1,4 @@
-require(["esri/map","esri/layers/Graphic", "esri/InfoTemp","esri/geometry/Point",
+require(["esri/map","esri/layers/Graphic", "esri/InfoTemplate","esri/geometry/Point",
 "esri/symbols/PictureMarkerSymbol","esri/graphic","esri/Color","dojo/domReady!"],
 	function(Map, GraphicsLayer){
 		map = new Map("mapDiv",{
@@ -9,7 +9,9 @@ require(["esri/map","esri/layers/Graphic", "esri/InfoTemp","esri/geometry/Point"
 	var graphics = new GraphicsLayer();
 	map.addLayer(graphics);
 	getBikingWalkingNoElevation();
-});
+	
+	}
+};
 
 function getbiking_walking_with_elevation(){
 }

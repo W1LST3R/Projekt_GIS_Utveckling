@@ -3,7 +3,7 @@ require(["esri/map","esri/layers/Graphic", "esri/InfoTemp","esri/geometry/Point"
   function(Map, GraphicsLayer){
     map = new Map("mapDiv",{
       basemap: "streets",
-      center: [],
+      center: [60.208251508,17.923597762],
       zoom: 14
     });
 

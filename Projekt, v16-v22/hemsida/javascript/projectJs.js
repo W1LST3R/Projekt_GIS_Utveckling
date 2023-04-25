@@ -6,3 +6,12 @@ require(["esri/map","esri/layers/Graphic", "esri/InfoTemp","esri/geometry/Point"
       center: [],
       zoom: 14
     });
+
+  
+  
+  
+  function makePoi() {
+	var poiLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(poiLayer);
+
+}

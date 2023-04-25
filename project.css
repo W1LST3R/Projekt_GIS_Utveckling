@@ -4,5 +4,6 @@ html, body, #mapDiv {
   height:100%;
 }
 #mapDiv{
+  position: absolute;
   z-index: -1;
 }

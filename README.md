@@ -1,4 +1,4 @@
-# Projekt_GIS_Utveckling
+# To do list:
 
-To do list:
+1. Koda loss
 

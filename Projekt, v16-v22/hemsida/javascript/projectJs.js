@@ -10,7 +10,8 @@ require(["esri/map","esri/layers/Graphic", "esri/InfoTemp","esri/geometry/Point"
 	map.addLayer(graphics);
 });
 
-function getbiking_walking_with_elevation
+function getbiking_walking_with_elevation(){
+}
 	
 function getBikingWalkingNoElevation(){
 	var poiData;

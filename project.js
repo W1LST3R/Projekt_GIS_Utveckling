@@ -11,11 +11,11 @@ require(["esri/map","esri/layers/Graphic","esri/InfoTemplate","esri/geometry/Poi
 	//getBikingWalkingNoElevation();
 });
 
-function getbiking_walking_with_elevation(){
+/*function getbiking_walking_with_elevation(){
 }
 	
 function getBikingWalkingNoElevation(){
-	/*var poiData;
+	var poiData;
 	var nameForjson;
 	var firstHalfOfName = "https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_";
 	var seccondHalfOfName = "_wgs84.json";

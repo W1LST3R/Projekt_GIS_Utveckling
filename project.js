@@ -4,7 +4,7 @@ require(["esri/map","esri/layers/Graphic","esri/InfoTemplate","esri/geometry/Poi
 		map = new Map("mapDiv",{
       			basemap: "streets",
       			center: [60.208251508,17.923597762],
-      			zoom: 14
+      			zoom: 10
     	});	
 	var graphics = new GraphicsLayer();
 	map.addLayer(graphics);

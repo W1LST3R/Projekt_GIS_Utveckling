@@ -21,22 +21,22 @@ function getBikingWalkingNoElevation(){
 	var seccondHalfOfName = "_wgs84.json";
 	for(i=11;i<23;i++){
 		nameForjson = firstHalfOfName+i+seccondHalfOfName;
-		poiData = {url:nameForjson, handleAs:"json", content:{}, load:showStops};
+		poiData = {src:nameForjson, handleAs:"json", content:{}, load:showStops};
 		dojo.xhrGet(poiData);
 	}
-	poiData = {url:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_11_1_wgs84.json", handleAs:"json", content:{}, load:showStops};
+	poiData = {src:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_11_1_wgs84.json", handleAs:"json", content:{}, load:showStops};
 	dojo.xhrGet(poiData);
 	
-	poiData = {url:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_1_wgs84.json", handleAs:"json", content:{}, load:showStops};
+	poiData = {src:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_1_wgs84.json", handleAs:"json", content:{}, load:showStops};
 	dojo.xhrGet(poiData);
 		
-	poiData = {url:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_2_inkl_kolkoja_wgs84.json", handleAs:"json", content:{}, load:showStops};
+	poiData = {src:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_2_inkl_kolkoja_wgs84.json", handleAs:"json", content:{}, load:showStops};
 	dojo.xhrGet(poiData);	
 	
-	poiData = {url:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_21_1_wgs84.json", handleAs:"json", content:{}, load:showStops};
+	poiData = {src:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/Etapp_Slinga_21_1_wgs84.json", handleAs:"json", content:{}, load:showStops};
 	dojo.xhrGet(poiData);
 	
-	poiData = {url:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/test.json", handleAs:"json", content:{}, load:showStops};
+	poiData = {src:"https://github.com/W1LST3R/Projekt_GIS_Utveckling/blob/main/Projekt%2C%20v16-v22/data/data/Biking_walking_no_elevation/test.json", handleAs:"json", content:{}, load:showStops};
 	dojo.xhrGet(poiData);
 }
 

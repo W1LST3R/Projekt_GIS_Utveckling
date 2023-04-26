@@ -1,14 +1,20 @@
-require(["esri/map","esri/layers/Graphic","esri/InfoTemplate","esri/geometry/Point",
-"esri/symbols/PictureMarkerSymbol","esri/symbols/SimpleMarkerSymbol","esri/symbols/SimpleFillSymbol","esri/graphic","esri/Color","dojo/domReady!"],
-	function(Map, GraphicsLayer){
-		map = new Map("mapDiv",{
-      			basemap: "streets",
-      			center: [60.208251508,17.923597762],
-      			zoom: 10
-    	});	
-	var graphics = new GraphicsLayer();
-	map.addLayer(graphics);
-	//getBikingWalkingNoElevation();
+require([
+    "esri/map",
+    "esri/layers/GraphicsLayer",
+    "esri/geometry/Point",
+    "esri/symbols/PictureMarkerSymbol",
+    "esri/symbols/SimpleMarkerSymbol",
+    "esri/symbols/SimpleFillSymbol",
+    "esri/Color",
+    "dojo/domReady!"
+], function(Map, GraphicsLayer, Point, PictureMarkerSymbol, SimpleMarkerSymbol, SimpleFillSymbol, Color) {
+    var map = new Map("mapDiv", {
+        basemap: "streets",
+        center: [60.208251508, 17.923597762],
+        zoom: 10
+    });
+    var graphics = new GraphicsLayer();
+    map.addLayer(graphics);
 });
 
 /*function getbiking_walking_with_elevation(){

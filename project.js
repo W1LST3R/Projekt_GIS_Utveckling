@@ -56,5 +56,5 @@ function showStops(poiData) {
 
 function makePoi() {
 	var poiLayer = new esri.layers.GraphicsLayer();
-	map.addLayer(poiLayer);
-}*/
+	map.addLayer(poiLayer);*/
+}

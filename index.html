@@ -1,22 +1,31 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>DVG315 Projekt</title>
+	<title>DVG315 Projektet</title>
 	<meta charset="utf-8" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-
-	<link rel="stylesheet" href="https://js.arcgis.com/3.39/dijit/themes/claro/claro.css">
-	<link rel="stylesheet" href="https://js.arcgis.com/3.39/esri/css/esri.css">
-	<link rel="stylesheet" href="project.css">
 	
-	<script src="https://js.arcgis.com/3.39"></script>
+	<script src="http://js.arcgis.com/3.39/init.js"></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+	<link rel="stylesheet" href="http://js.arcgis.com/3.39/dijit/themes/claro/claro.css">
+	<link rel="stylesheet" href="http://js.arcgis.com/3.39/esri/css/esri.css">
+	<link rel="stylesheet" href="project.css">
+
 	<script src="project.js"></script>
 </head>
 <body class="claro">
-	<h1>Testing testing</h1>
-	<div id="mapDiv">
-	</div>
-	<button type="button" id="etapp11">Etapp 11</button>
+	<header>
+		Food <span class="material-symbols-outlined">restaurant</span>
+		WC <span class="material-symbols-outlined">wc</span>
+		Info <span class="material-symbols-outlined">info</span>
+		Hiking <span class="material-symbols-outlined">hiking</span>
+		Fire <span class="material-symbols-outlined">local_fire_department</span>
+		
+		<button type="button" id="noElevation">Biking trails</button>
+		<button type="button" id="withElevation">Walking trails</button>
+		<button type="button" id="canoeTrail">Canoe trails</button>
+	</header>
+	<div id="mapDiv"></div>
 </body>
 </html>

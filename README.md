@@ -32,4 +32,5 @@ Geodata för applikationen finns tillgängliga som json filer (vandrings- och cy
 Projektarbetet utförs i grupper bestående av 3-4 studenter.
 
 Arbetet ska utföras enligt principer för agil utveckling. Ni ska använda SCRUM metoden.
-https://prod.liveshare.vsengsaas.visualstudio.com/join?3A1D235D6CB30A7AC649EAC3403F56254F4C 
+https://prod.liveshare.vsengsaas.visualstudio.com/join?3A1D235D6CB30A7AC649EAC3403F56254F4C
+http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/

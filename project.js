@@ -29,8 +29,10 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	};*/
 
 	initButtons();
+	getPointData();
+
 	//polyline test
-	var testPoly = new Polyline();
+	/*var testPoly = new Polyline();
 	testPoly.addPath([[17.138002653843884, 60.657146144331314], [17.122896452672002, 60.66723896375573], [17.09268405032824, 60.65580019606267]]);
 	var testSymbol = new SimpleLineSymbol();
 	testSymbol.color = "red";
@@ -40,7 +42,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	map.addLayer(testLayer);
 
 	var graphicTest = new Graphic(testPoly, testSymbol);
-	testLayer.add(graphicTest);
+	testLayer.add(graphicTest);*/
 
 });
 
@@ -115,19 +117,22 @@ function makeLine(pointData) {
 		path.push(point);
 	});
 
-	var poly = new esri.geometry.Multipoint();
-	/*var symbol = new esri.symbol.SimpleLineSymbol();
+	var poly = new esri.geometry.Polyline();
+	poly.addPath(path)
+	var symbol = new esri.symbol.SimpleLineSymbol();
 	symbol.style = "dash";
 	symbol.width = 3;
-	symbol.color = randomColor();*/
-	for(x = 0; x < path.length; x++) {
+	symbol.color = randomColor();
+
+	console.log(poly);
+
+	/*for(x = 0; x < path.length; x++) {
 		poly.addPoint(path[x]);
 	};
-	console.log(poly);
 	var symbol = new esri.symbol.PictureMarkerSymbol();
     symbol.setUrl("http://www.student.hig.se/~22wipe02/udgis/lab6/bussbild.png");
     symbol.setWidth(7);
-    symbol.setHeight(7);
+    symbol.setHeight(7);*/
 
 	count++;
 	var graphic = new esri.Graphic(poly, symbol).setInfoTemplate(new esri.InfoTemplate(count, getName()));

@@ -1,11 +1,9 @@
+//Globala variabler
 var map;
-//var poly;
-//var symbol;
 var count = 0;
-var name = " ";
+var nameArr = new Array();
 var pointLayer;
 var markers = new Array();
-
 
 require(["esri/map", "esri/layers/GraphicsLayer", "esri/InfoTemplate", 
 "esri/geometry/Point", "esri/symbols/PictureMarkerSymbol", "esri/graphic", 
@@ -17,85 +15,86 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		center: [17.512102147310593, 60.16792682157719],
 		zoom:8
 	});
-	// För att hitta koordinater på kartan.
+	// FÃ¶r att hitta koordinater pÃ¥ kartan.
 	On(map, "click", function(evt) {
 		var mapPoint = esri.geometry.webMercatorToGeographic(evt.mapPoint);
 		console.log(mapPoint.x + ", " + mapPoint.y);
 	});
 
-	/*symbol = {
-		type: "simple-line",  // autocasts as new SimpleLineSymbol()
-		color: "lightblue",
-		width: "2px",
-		style: "short-dash"
-	};*/
-
 	initButtons();
-
-	//polyline test
-	/*var testPoly = new Polyline();
-	testPoly.addPath([[17.138002653843884, 60.657146144331314], [17.122896452672002, 60.66723896375573], [17.09268405032824, 60.65580019606267]]);
-	var testSymbol = new SimpleLineSymbol();
-	testSymbol.color = "red";
-	testSymbol.width = 5;
-
-	var testLayer = new GraphicsLayer();
-	map.addLayer(testLayer);
-
-	var graphicTest = new Graphic(testPoly, testSymbol);
-	testLayer.add(graphicTest);*/
+	getPointData();
+	//getPointElevationData();
 
 });
 
 function getPointData() {
-	//Ändra denna för att ta aktuell fil för visning
+	//Ã„ndra denna fÃ¶r att ta aktuell fil fÃ¶r visning
+	
+	//!!!OBS!!! SIMON Ã„NDRADE ALLA DOJO.XHRGET TILL SYNC:"TRUE", DETTA FÃ–R ATT I VISSA FALL SÃ… KOPPLADES INTE RÃ„TT DATA TILL RÃ„TT OBJEKT OSV.. FINNS KANSKE ANNAN LÃ–SNING
+	
 	var filePath;
 	for(i = 11; i < 23; i++) {
 		if(i == 18) i = 19;
 		filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_"+ i + "_wgs84.json";
-		var pointData = {url:filePath, handleAs:"json", content:{}, load:makeLine};
+		saveName(filePath.substring(filePath.lastIndexOf("/")+1));
+		var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 		dojo.xhrGet(pointData);
-		saveName("Etapp " + i);
 	};
-    pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_11_1_wgs84.json", handleAs:"json", content:{}, load:makeLine};
+	saveName("Etapp_Slinga_11_1_wgs84.json");
+    pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_11_1_wgs84.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 	
-	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_1_wgs84.json", handleAs:"json", content:{}, load:makeLine};
+	saveName("Etapp_Slinga_12_1_wgs84.json");
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_1_wgs84.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
-		
-	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_2_inkl_kolkoja_wgs84.json", handleAs:"json", content:{}, load:makeLine};
+	
+	saveName("Etapp_Slinga_12_2_inkl_kolkoja_wgs84.json");
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_12_2_inkl_kolkoja_wgs84.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);	
 	
-	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_21_1_wgs84.json", handleAs:"json", content:{}, load:makeLine};
+	saveName("Etapp_Slinga_21_1_wgs84.json");
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_Slinga_21_1_wgs84.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 	
-	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/test.json", handleAs:"json", content:{}, load:makeLine};
+	saveName("test.json");
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/test.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 	
-	//var pointData = {url:bengt, handleAs:"json", content:{}, load:makeLine};
-	//dojo.xhrGet(pointData);
+	saveName("Biking_elevation161008.json");
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json", handleAs:"json", sync:"true", content:{}, load:makeElevationLine};
+	dojo.xhrGet(pointData);
+	saveName("Walk_elevation_123547.json");
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json", handleAs:"json", sync:"true", content:{}, load:makeElevationLine};
+	dojo.xhrGet(pointData);
+	saveName("Walk_elevation_151851.json");
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json", handleAs:"json", sync:"true", content:{}, load:makeElevationLine};
+	dojo.xhrGet(pointData);
+	
 }
 
+/*
 function getPointElevationData(){
+	//saveName("Biking_elevation161008.json");
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json", handleAs:"json", content:{}, load:makeElevationLine};
 	dojo.xhrGet(pointData);
+	//saveName("Walk_elevation_123547.json");
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json", handleAs:"json", content:{}, load:makeElevationLine};
 	dojo.xhrGet(pointData);
+	//saveName("Walk_elevation_151851.json");
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json", handleAs:"json", content:{}, load:makeElevationLine};
 	dojo.xhrGet(pointData);
 }
-
+*/
 
 function saveName(nameToSave) {
 	//console.log(nameToSave);
-	name = nameToSave;
+	nameArr.push(nameToSave);
 }
 
 function getName() {
-	return name;
+	return nameArr[count-1];
 }
 	
-
 function makeLine(pointData) {
 	pointLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(pointLayer);
@@ -110,86 +109,66 @@ function makeLine(pointData) {
 		path.push(point);
 	});
 	
-	
 	var poly = new esri.geometry.Polyline();
 	poly.addPath(path);
 	var symbol = new esri.symbol.SimpleLineSymbol();
 	symbol.style = "dash";
-	symbol.width = 3;
+	symbol.width = 4;
 	symbol.color = randomColor();
-
-	console.log(poly);
 	
 	count++;
-	var graphic = new esri.Graphic(poly, symbol).setInfoTemplate(new esri.InfoTemplate(count, getName()));
-	markers.push(pointLayer);
-	pointLayer.add(graphic);
+	var graphic = new esri.Graphic(poly, symbol).setInfoTemplate(new esri.InfoTemplate(getName(), count));
 	
-
-	/*for(x = 0; x < path.length; x++) {
-		poly.addPoint(path[x]);
-	};
-	var symbol = new esri.symbol.PictureMarkerSymbol();
-    symbol.setUrl("http://www.student.hig.se/~22wipe02/udgis/lab6/bussbild.png");
-    symbol.setWidth(7);
-    symbol.setHeight(7);*/
-
-	
+	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	markers.push(graphic);
+	markers[markers.length-1].hide();
+	pointLayer.add(markers[markers.length-1]);	
 }
-	
+
 function makeElevationLine(pointData) {
 	pointLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(pointLayer);
 		
 	var path = new Array();
 	var elevation = new Array();
+	
 	//ForEach loop genom JSON data 
 	dojo.forEach(pointData.posts, function(posts) {
 		var lng = posts.longitude;
 		var lat = posts.latitude;
 		var ele = posts.elevation;
-		var point = new esri.geometry.Point(lng, lat);
+		var point = new esri.geometry.Point(lng, lat, ele);
 		path.push(point);
 		elevation.push(ele);
 		
 	});
 	
 	var poly = new esri.geometry.Polyline();
+	poly.hasZ = true;
+	console.log(path);
 	poly.addPath(path)
 	var symbol = new esri.symbol.SimpleLineSymbol();
-	symbol.style = "dash";
-	symbol.width = 3;
+	symbol.style = "dot";
+	symbol.width = 5;
 	symbol.color = randomColor();
-
-	console.log(poly);
-	console.log(elevation);
 	
 	count++;
-	var graphic = new esri.Graphic(poly, symbol).setInfoTemplate(new esri.InfoTemplate(count));
-	markers.push(pointLayer);
-	pointLayer.add(graphic);
 	
+	var eleStr = "";
+	
+	for(var i = 0; i < elevation.length; i++) {
+		eleStr += elevation[i] + ", ";
+	}
+	
+	var graphic = new esri.Graphic(poly, symbol).setInfoTemplate(new esri.InfoTemplate(getName(), count + ": " + eleStr));
+	
+	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	markers.push(graphic);
+	markers[markers.length-1].hide();
+	pointLayer.add(markers[markers.length-1]);
 }
-
 	
-	/*
-	var poly = new esri.geometry.Polyline([test]);
-	//poly.addPath(test);
-	console.log(poly);
-	//poly.addPath(path)
-	var symbol = new esri.symbol.SimpleLineSymbol();
-	symbol.style = "dash";
-	symbol.color = "red";
-	symbol.width = 3;
-
-	var layer = new esri.layers.GraphicsLayer();
-	map.addLayer(layer);
-
-	var graphic = new esri.Graphic(poly, symbol);
-	layer.add(graphic);
-	//console.log(getName());*/
-	
-//bara för att se skillnad på de olika lederna
+//bara fÃ¶r att se skillnad pÃ¥ de olika lederna
 function randomColor() {
 	let randomColor = "rgb("+random()+","+random()+","+random()+")";
 	//console.log(randomColor);
@@ -200,35 +179,70 @@ function random() {
 	return Math.floor(Math.random() * 255);
 }
 
-
 function initButtons(){
 	require(["dojo/on"], function(on){
 		dojo.query(".mapButton").forEach(function(entry, i){ 
-			entry.addEventListener("click", function() { 
-				showTrail(entry.id); 
+			entry.addEventListener("click", function() {				
+				showTrail(entry.id);
 			}); 
 		}); 
 	}); 
-
 } 
 
+var pressedNoEle = false; //variabel fÃ¶r att hÃ¥lla reda pÃ¥ om man har klickat pÃ¥ visning av trails utan elevation data
+var pressedEle = false; //variabel fÃ¶r att hÃ¥lla reda pÃ¥ om man har klickat pÃ¥ visning av trails med elevation data
+
+function showTrail(buttonIndex) {
+	
+	//markers[0-15] == noElevation, markers[16-18] == elevation <-- verkar iallafall gÃ¤lla vid sync:"true"
+	if(buttonIndex != 3) {
+		if(buttonIndex == 1 && !pressedNoEle) {
+			for(let i = 0; i < 16; i++) {
+				markers[i].show();
+			}
+			pressedNoEle = true;
+		} else if(buttonIndex == 1 && pressedNoEle){
+			for(let i = 0; i < 16; i++) {
+				markers[i].hide();
+			}
+			pressedNoEle = false;
+		} 
+		
+		if(buttonIndex == 2 && !pressedEle) {
+			for(let i = 16; i < 19; i++) {
+				markers[i].show();
+			}
+			pressedEle = true;
+		} else if(buttonIndex == 2 && pressedEle){
+			for(let i = 16; i < 19; i++) {
+				markers[i].hide();
+			}
+			pressedEle = false;
+		}
+	} else {
+		alert("Click on one of the buttons to show a trail");
+	}
+} 
+
+/*
 function showTrail(buttonIndex){
 	//visar de olika trailsen
 	if(buttonIndex == 1 || buttonIndex == 2){
-		//anropar rätt trail
+		//anropar rÃ¤tt trail
 		trail(buttonIndex);
-		//för att hamna på rätt plats i arrayen
+		//fÃ¶r att hamna pÃ¥ rÃ¤tt plats i arrayen
 		var posts =  buttonIndex-1 ;
 		alert(markers.length);
-		//loopar igenom och gömmer den trail man visade innan
+		console.log(markers);
+		//loopar igenom och gÃ¶mmer den trail man visade innan
 		for (i = 0; i < markers.length+1; i++){
 			markers[i].hide();
 		}
-		//visar rätt trail
+		//visar rÃ¤tt trail
 		markers[posts].show();
 	} 
 	else{
-		//visar infon på info knappen
+		//visar infon pÃ¥ info knappen
 		if(buttonIndex==3){
 				alert("Click on one of the buttons to show a trail")
 		}
@@ -238,15 +252,15 @@ function showTrail(buttonIndex){
 function trail(buttonIndex){
 	//visar posts utan elevation data
 	if(buttonIndex == 1){
-		getPointData();
-		count = 0;	
+		count = 0;
+		getPointData();	
 	} 
 	else {
 		//visar posts med elevation data
 		if(buttonIndex == 2){
-			getPointElevationData();
 			count = 0;
+			getPointElevationData();
 		}
 	}	
 }
-
+*/

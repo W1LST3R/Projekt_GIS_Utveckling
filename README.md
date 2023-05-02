@@ -20,6 +20,8 @@ b. POI markörerna sparas permanent och visas i fortsättningen tillsammans med 
 
 9. Möjligheten att lägga till nya kategorier och leder.
 
+10. Lägga till namn i json-filerna.
+
 # Bakground:
 
 Applikationen ska utvecklas med ArcGIS API för JavaScript. Eventuella serverlösningar utvecklas med php/MySQL.

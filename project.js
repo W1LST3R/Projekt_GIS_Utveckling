@@ -4,6 +4,8 @@ var count = 0;
 var nameArr = new Array();
 var pointLayer;
 var markers = new Array();
+var walkingMarkers = new Array();
+var bikingMarkers = new Array();
 
 require(["esri/map", "esri/layers/GraphicsLayer", "esri/InfoTemplate", 
 "esri/geometry/Point", "esri/symbols/PictureMarkerSymbol", "esri/graphic", 
@@ -15,7 +17,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		center: [17.512102147310593, 60.16792682157719],
 		zoom:8
 	});
-	// FÃ¶r att hitta koordinater pÃ¥ kartan.
+	// För att hitta koordinater på kartan.
 	On(map, "click", function(evt) {
 		var mapPoint = esri.geometry.webMercatorToGeographic(evt.mapPoint);
 		console.log(mapPoint.x + ", " + mapPoint.y);
@@ -28,9 +30,9 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 });
 
 function getPointData() {
-	//Ã„ndra denna fÃ¶r att ta aktuell fil fÃ¶r visning
+	//Ändra denna för att ta aktuell fil för visning
 	
-	//!!!OBS!!! SIMON Ã„NDRADE ALLA DOJO.XHRGET TILL SYNC:"TRUE", DETTA FÃ–R ATT I VISSA FALL SÃ… KOPPLADES INTE RÃ„TT DATA TILL RÃ„TT OBJEKT OSV.. FINNS KANSKE ANNAN LÃ–SNING
+	//!!!OBS!!! SIMON ÄNDRADE ALLA DOJO.XHRGET TILL SYNC:"TRUE", DETTA FÖR ATT I VISSA FALL SÅ KOPPLADES INTE RÄTT DATA TILL RÄTT OBJEKT OSV.. FINNS KANSKE ANNAN LÖSNING
 	
 	var filePath;
 	for(i = 11; i < 23; i++) {
@@ -93,6 +95,7 @@ function saveName(nameToSave) {
 
 function getName() {
 	return nameArr[count-1];
+	//return nameArr.pop(0);
 }
 	
 function makeLine(pointData) {
@@ -119,7 +122,7 @@ function makeLine(pointData) {
 	count++;
 	var graphic = new esri.Graphic(poly, symbol).setInfoTemplate(new esri.InfoTemplate(getName(), count));
 	
-	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	//Sparar aktuell led i den globala Arrayen markers, gömmer den, och lägger sedan till den på kartlagret
 	markers.push(graphic);
 	markers[markers.length-1].hide();
 	pointLayer.add(markers[markers.length-1]);	
@@ -137,38 +140,59 @@ function makeElevationLine(pointData) {
 		var lng = posts.longitude;
 		var lat = posts.latitude;
 		var ele = posts.elevation;
-		var point = new esri.geometry.Point(lng, lat, ele);
+		var point = new esri.geometry.Point(lng, lat);
+		point.hasZ = true;
+		point.z = ele;
+		//console.log(point.hasZ);
+		//console.log(point)
 		path.push(point);
 		elevation.push(ele);
-		
 	});
 	
 	var poly = new esri.geometry.Polyline();
 	poly.hasZ = true;
-	console.log(path);
 	poly.addPath(path)
+	//console.log(poly);
 	var symbol = new esri.symbol.SimpleLineSymbol();
 	symbol.style = "dot";
 	symbol.width = 5;
 	symbol.color = randomColor();
 	
+	/*var highlightSymbol = new esri.symbol.SimpleLineSymbol();
+	symbol.style = "solid";
+	symbol.width = 5.5;
+	symbol.color = "red";
+	
+	pointLayer.on("mouse-over", function(evt){
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol);
+		map.graphics.add(highlightGraphic);
+	});*/	
+	
 	count++;
 	
+	//string för att se elevation data
 	var eleStr = "";
 	
-	for(var i = 0; i < elevation.length; i++) {
+	for(var i = 0; i < elevation.length-1; i++) {
 		eleStr += elevation[i] + ", ";
 	}
+	eleStr += elevation[elevation.length-1];
+	//slut på string
 	
 	var graphic = new esri.Graphic(poly, symbol).setInfoTemplate(new esri.InfoTemplate(getName(), count + ": " + eleStr));
 	
-	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	//Sparar aktuell led i den globala Arrayen markers, gömmer den, och lägger sedan till den på kartlagret
+	if(getName().charAt(0) == "W") {
+		walkingMarkers.push(graphic);
+	} else {
+		bikingMarkers.push(graphic);
+	}
 	markers.push(graphic);
 	markers[markers.length-1].hide();
 	pointLayer.add(markers[markers.length-1]);
 }
 	
-//bara fÃ¶r att se skillnad pÃ¥ de olika lederna
+//bara för att se skillnad på de olika lederna
 function randomColor() {
 	let randomColor = "rgb("+random()+","+random()+","+random()+")";
 	//console.log(randomColor);
@@ -189,12 +213,12 @@ function initButtons(){
 	}); 
 } 
 
-var pressedNoEle = false; //variabel fÃ¶r att hÃ¥lla reda pÃ¥ om man har klickat pÃ¥ visning av trails utan elevation data
-var pressedEle = false; //variabel fÃ¶r att hÃ¥lla reda pÃ¥ om man har klickat pÃ¥ visning av trails med elevation data
+var pressedNoEle = false; //variabel för att hålla reda på om man har klickat på visning av trails utan elevation data
+var pressedEle = false; //variabel för att hålla reda på om man har klickat på visning av trails med elevation data
 
 function showTrail(buttonIndex) {
 	
-	//markers[0-15] == noElevation, markers[16-18] == elevation <-- verkar iallafall gÃ¤lla vid sync:"true"
+	//markers[0-15] == noElevation, markers[16-18] == elevation <-- verkar iallafall gälla vid sync:"true"
 	if(buttonIndex != 3) {
 		if(buttonIndex == 1 && !pressedNoEle) {
 			for(let i = 0; i < 16; i++) {
@@ -209,13 +233,19 @@ function showTrail(buttonIndex) {
 		} 
 		
 		if(buttonIndex == 2 && !pressedEle) {
-			for(let i = 16; i < 19; i++) {
-				markers[i].show();
+			for(let i = 0; i < walkingMarkers.length; i++) {
+				walkingMarkers[i].show();
+			}
+			for(let i = 0; i < bikingMarkers.length; i++) {
+				bikingMarkers[i].show();
 			}
 			pressedEle = true;
 		} else if(buttonIndex == 2 && pressedEle){
-			for(let i = 16; i < 19; i++) {
-				markers[i].hide();
+			for(let i = 0; i < walkingMarkers.length; i++) {
+				walkingMarkers[i].hide();
+			}
+			for(let i = 0; i < bikingMarkers.length; i++) {
+				bikingMarkers[i].hide();
 			}
 			pressedEle = false;
 		}
@@ -224,25 +254,70 @@ function showTrail(buttonIndex) {
 	}
 } 
 
+function hideShow(obj) {
+	if(pressedEle) {
+		if(obj.id == "walk") {
+			if(obj.checked == false) {
+				for(let i = 0; i < walkingMarkers.length; i++) {
+					walkingMarkers[i].hide();
+				}
+				//obj.checked = false;
+			} else {
+				for(let i = 0; i < walkingMarkers.length; i++) {
+					walkingMarkers[i].show();
+				}
+				//obj.checked = true;
+			}
+		} else {
+			if(obj.checked == false) {
+				for(let i = 0; i < bikingMarkers.length; i++) {
+					bikingMarkers[i].hide();
+				}
+				//obj.checked = false;
+			} else {
+				for(let i = 0; i < bikingMarkers.length; i++) {
+					bikingMarkers[i].show();
+				}
+				//obj.checked = true;
+			}
+		}
+	} else {
+		obj.checked = false;
+	}
+}
+
+function active() {
+	let bike = document.querySelector("#bike");
+	let walk = document.querySelector("#walk");
+	
+	if(!pressedEle) {
+		bike.checked = true;
+		walk.checked = true;
+	} else {
+		bike.checked = false;
+		walk.checked = false;
+	}
+}
+
 /*
 function showTrail(buttonIndex){
 	//visar de olika trailsen
 	if(buttonIndex == 1 || buttonIndex == 2){
-		//anropar rÃ¤tt trail
+		//anropar rätt trail
 		trail(buttonIndex);
-		//fÃ¶r att hamna pÃ¥ rÃ¤tt plats i arrayen
+		//för att hamna på rätt plats i arrayen
 		var posts =  buttonIndex-1 ;
 		alert(markers.length);
 		console.log(markers);
-		//loopar igenom och gÃ¶mmer den trail man visade innan
+		//loopar igenom och gömmer den trail man visade innan
 		for (i = 0; i < markers.length+1; i++){
 			markers[i].hide();
 		}
-		//visar rÃ¤tt trail
+		//visar rätt trail
 		markers[posts].show();
 	} 
 	else{
-		//visar infon pÃ¥ info knappen
+		//visar infon på info knappen
 		if(buttonIndex==3){
 				alert("Click on one of the buttons to show a trail")
 		}

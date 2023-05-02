@@ -21,9 +21,15 @@
 		Info <span class="material-symbols-outlined">info</span>
 		Hiking <span class="material-symbols-outlined">hiking</span>
 		Fire <span class="material-symbols-outlined">local_fire_department</span>
-		
+		<br />
 		<button type="button" class="mapButton" id="1">Biking/Walking trails without elevation</button>
-		<button type="button" class="mapButton" id="2">Biking/Walking trails with elevation</button>
+		
+		<button type="button" class="mapButton" id="2" onclick="active()">Biking/Walking trails with elevation</button>
+			<input type="checkbox" value="Biking" id="bike" onclick="hideShow(this)">
+			<label for="bike">Biking</label>
+			<input type="checkbox" value="Walking" id="walk" onclick="hideShow(this)">
+			<label for="walk">Walking</label>
+		
 		<button type="button" class="mapButton" id="3">Help</button>
 	</header>
 	<div id="mapDiv"></div>

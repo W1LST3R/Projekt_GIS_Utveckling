@@ -31,42 +31,36 @@
 			<label for="walk">Walking</label>
 		
 		<button type="button" class="mapButton" id="3">Help</button>
-	</header>
-	<div id="mapDiv">
-		<div id="newPOI">
-			<form name="frm">
-				<table>
-					<tr>
-						<td>*Name For POI</td>
-						<td colspan="2"><input type="text" id="name" name="poiName"></input></td>
-					</tr>
-								
-					<tr>
-						<td>*Information For POI</td>
-						<td colspan="2"><input type="text" id="info" name="poiInf"></input></td>
-					</tr>
-					
-					<tr>
-						<td>Välj Logotyp för poi:</td>
-						<td colspan="2">
-						<select name="poiLogo">
-									<Option>Food</Option>
-									<Option>WC</Option>
-									<Option>Info</Option>
-									<Option>Parking</Option>
-									<Option>Campfire</Option>
-									<Option>Bench</Option>
-						</select>
-						</td>
-					</tr>
-							
-					<tr>
-						<tr>	
-							<td style="text-align:right"><input type="button" onclick="poiInfo()" value="Make current POI"></td>
-						</tr>
-				</table>
-			</form>
+		
+		<div class="popup">
+		<button type="button" class="mapButton" onclick="makePoi(this)">makePoi</button>
+		<span class="popuptext" id="myPopup">
+		
+			<input type="text" id="poiName" value="Namn för din poi..." onfocus="this.value=''">
+			<input type="text" id="poiInfo" value="Info för din poi..." onfocus="this.value=''">
+			<select name="shapes" id="shape">
+				<option value="triangle">triangle</option>
+				<option value="circle">circle</option>
+				<option value="diamond">diamond</option>
+				<option value="square">square</option>
+				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Bench.png">bench</option>
+				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Info.png">info</option>
+				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/WC.jpg">wc</option>
+				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Campfire.jpg">eldplats</option>
+				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Parking.jpg">parkering</option>
+				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Food.jpg">matplats</option>
+				<!--<option value=""></option>-->
+			</select>
+			<select name="colors" id="color">
+				<option value="red">red</option>
+				<option value="blue">blue</option>
+				<option value="black">black</option>
+				<option value="white">white</option>
+			</select>
+		</span>
 		</div>
-	</div>
+		
+	</header>
+	<div id="mapDiv"></div>
 </body>
 </html>

@@ -32,6 +32,41 @@
 		
 		<button type="button" class="mapButton" id="3">Help</button>
 	</header>
-	<div id="mapDiv"></div>
+	<div id="mapDiv">
+		<div id="newPOI">
+			<form name="frm">
+				<table>
+					<tr>
+						<td>*Name For POI</td>
+						<td colspan="2"><input type="text" id="name" name="poiName"></input></td>
+					</tr>
+								
+					<tr>
+						<td>*Information For POI</td>
+						<td colspan="2"><input type="text" id="info" name="poiInf"></input></td>
+					</tr>
+					
+					<tr>
+						<td>Välj Logotyp för poi:</td>
+						<td colspan="2">
+						<select name="poiLogo">
+									<Option>Food</Option>
+									<Option>WC</Option>
+									<Option>Info</Option>
+									<Option>Parking</Option>
+									<Option>Campfire</Option>
+									<Option>Bench</Option>
+						</select>
+						</td>
+					</tr>
+							
+					<tr>
+						<tr>	
+							<td style="text-align:right"><input type="button" onclick="poiInfo()" value="Make current POI"></td>
+						</tr>
+				</table>
+			</form>
+		</div>
+	</div>
 </body>
 </html>

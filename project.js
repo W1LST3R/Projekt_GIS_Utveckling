@@ -72,6 +72,9 @@ function getPointData() {
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json", handleAs:"json", sync:"true", content:{}, load:makeElevationLine};
 	dojo.xhrGet(pointData);
 	
+	//för att ladda in poi array
+	/*pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/POIsForMap/POI.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);*/
 }
 
 /*
@@ -191,6 +194,34 @@ function makeElevationLine(pointData) {
 	markers[markers.length-1].hide();
 	pointLayer.add(markers[markers.length-1]);
 }
+
+/*
+function makePOIs(pointData){
+	pointLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(pointLayer);
+		
+	var allPOIs = new Array();
+
+	//ForEach loop genom JSON data 
+	dojo.forEach(pointData.poi, function(poi) {
+		var lng = poi.longitude;
+		var lat = poi.latitude;
+		var info = poi.description;
+		var pic = poi.picture;
+		var logo = poi.logo;
+		var point = new esri.geometry.Point(lng,lat,info,pic,logo);
+		allPOIs.push(point);
+	});
+	
+	var SimpleMarkerSymbol = new SimpleSymbol().setStyle(SimpleSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
+	count++;
+	var graphic = new esri.Graphic(allPOIs, SimpleMarkerSymbol).setInfoTemplate(new esri.InfoTemplate(getName(), count,info,pic));
+	
+	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	markers.push(graphic);
+	markers[markers.length-1].hide();
+	pointLayer.add(markers[markers.length-1]);	
+}*/
 	
 //bara för att se skillnad på de olika lederna
 function randomColor() {

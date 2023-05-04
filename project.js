@@ -135,6 +135,10 @@ function getPointData() {
 	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_12_wgs84.json", handleAs:"json", sync:"true", content:{}, load:makePoint};
 	dojo.xhrGet(pointData);
 	
+	//för att ladda in poi array
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiData.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);
+	
 	
 	/*
 	//POI
@@ -325,6 +329,52 @@ function makeElevationLine(pointData) {
 	markers.push(graphic);
 	markers[markers.length-1].hide();
 	pointLayer.add(markers[markers.length-1]);
+}
+
+function makePOIs(pointData){
+	pointLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(pointLayer);
+		
+	var allPOIs = new Array();
+
+	//ForEach loop genom JSON data 
+	dojo.forEach(pointData.poi, function(poi) {
+		var lng = poi.longitude;
+		var lat = poi.latitude;
+		var info = poi.description;
+		var pic = poi.picture;
+		var logo = poi.logo;
+		var point = new esri.geometry.Point(lng,lat,info,pic,logo);
+		allPOIs.push(point);
+	});
+	
+	var SimpleMarkerSymbol = new SimpleSymbol().setStyle(SimpleSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
+	count++;
+	var graphic = new esri.Graphic(allPOIs, SimpleMarkerSymbol).setInfoTemplate(new esri.InfoTemplate(getName(), count,info,pic));
+	
+	//Highlight on hover
+	map.on("load", function(){
+        map.graphics.enableMouseEvents();
+        map.graphics.on("mouse-out", removeHighlight);
+    });
+	
+	pointLayer.on("mouse-over", function(evt){
+		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
+		highlightSymbol.style = "solid";
+		highlightSymbol.width = 5.5;
+		
+		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
+		
+		highlightSymbol.color = color;
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name));
+		map.graphics.add(highlightGraphic);
+	});
+	//End highlight on hover
+	
+	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	markers.push(graphic);
+	markers[markers.length-1].hide();
+	pointLayer.add(markers[markers.length-1]);	
 }
 
 function removeHighlight() {

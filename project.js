@@ -132,8 +132,8 @@ function getPointData() {
 	
 	
 	//test
-	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_12_wgs84.json", handleAs:"json", sync:"true", content:{}, load:makePoint};
-	dojo.xhrGet(pointData);
+	//pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Etapp_12_wgs84.json", handleAs:"json", sync:"true", content:{}, load:makePoint};
+	//dojo.xhrGet(pointData);
 	
 	//för att ladda in poi array
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiData.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
@@ -334,24 +334,31 @@ function makeElevationLine(pointData) {
 function makePOIs(pointData){
 	pointLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(pointLayer);
-		
 	var allPOIs = new Array();
 
 	//ForEach loop genom JSON data 
 	dojo.forEach(pointData.poi, function(poi) {
 		var lng = poi.longitude;
 		var lat = poi.latitude;
+		var name = poi.name;
 		var info = poi.description;
 		var pic = poi.picture;
 		var logo = poi.logo;
-		var point = new esri.geometry.Point(lng,lat,info,pic,logo);
-		allPOIs.push(point);
+		var point = new esri.geometry.Point(lng,lat);
+		console.log(pic);
+		
+		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
+				PictureMarkerSymbol.setUrl(logo);
+				PictureMarkerSymbol.setHeight(20);
+				PictureMarkerSymbol.setWidth(20);
+				
+				var Symbol = PictureMarkerSymbol;
+	var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
+	pointLayer.add(graphic);
 	});
 	
-	var SimpleMarkerSymbol = new SimpleSymbol().setStyle(SimpleSymbol.STYLE_CIRCLE).setSize(16).setColor(new Color([255,255,0,0.5]));
-	count++;
-	var graphic = new esri.Graphic(allPOIs, SimpleMarkerSymbol).setInfoTemplate(new esri.InfoTemplate(getName(), count,info,pic));
 	
+	/*
 	//Highlight on hover
 	map.on("load", function(){
         map.graphics.enableMouseEvents();
@@ -373,8 +380,8 @@ function makePOIs(pointData){
 	
 	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
 	markers.push(graphic);
-	markers[markers.length-1].hide();
-	pointLayer.add(markers[markers.length-1]);	
+	//markers[markers.length-1].hide();
+	pointLayer.add(markers[markers.length-1]);	*/
 }
 
 function removeHighlight() {
@@ -444,6 +451,9 @@ function showTrail(buttonIndex) {
 		}
 	} else {
 		alert("Click on one of the buttons to show a trail");
+	}
+	if(buttonIndex==4){
+		
 	}
 } 
 

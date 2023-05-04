@@ -1,22 +1,22 @@
 # To do list:
 
-1. Kategorivis översiktsvisning av lederna på gemensam kart vy med särskiljande layout, d.v.s. olika kategorier ska ha olika layout
+1. Kategorivis översiktsvisning av lederna på gemensam kart vy med särskiljande layout, d.v.s. olika kategorier ska ha olika layout/ nästan klar men behövs mer design
 
-2. Visning av POI (Points Of Interest)
+2. Visning av POI (Points Of Interest)/ klar kan behöva mer design
 
 3. Filtrering av POI vid ledstråk baserat på ett angivet geografiskt avstånd.
 
-4. Visning av information knuten till aktuell POI
+4. Visning av information knuten till aktuell POI/ klar
 
-5. Visning av bilder knutna till aktuell POI
+5. Visning av bilder knutna till aktuell POI/ klar
 
 6. Möjlighet för besökare att lägga till egna POI markörer under aktuell session;
-a. POI markörerna är temporära och sparas inte; är tillgängliga under den aktuella sessionen
+a. POI markörerna är temporära och sparas inte; är tillgängliga under den aktuella sessionen/ klar men kan behöva mer design
 b. POI markörerna sparas permanent och visas i fortsättningen tillsammans med andra markörer
 
 7. Verktygsfält på kartan där man kan filtrera bort/visa leder, kategorier av leder och POI.
 
-8. Ett antal olika varianter på POI ikoner, t.ex. info, matställe, rastplats etc.
+8. Ett antal olika varianter på POI ikoner, t.ex. info, matställe, rastplats etc./ klar om vi inte vill ha fler iconer
 
 9. Möjligheten att lägga till nya kategorier och leder.
 

@@ -482,3 +482,20 @@ function trail(buttonIndex){
 	}	
 }
 */
+
+function hidePOI(distance){
+  
+ // skapa en buffer kring leden, med hjälp av distansen vi som stoppas in i funktionen.
+  var buffer = geometryEngine.buffer(polyline, distance, "meters");
+
+  // kör for loop, se om varje punkt finns innanför buffern.
+  var isWithin = geometryEngine.within(point, buffer);
+
+  if (isWithin) {
+    console.log("innanför");
+  } else {
+    console.log("utanför");
+  }
+
+	
+}

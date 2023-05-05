@@ -62,6 +62,7 @@ function makePoi(obj) {
 			let color = document.querySelector("#color").value;
 			let info = document.querySelector("#poiInfo").value;
 			let namn = document.querySelector("#poiName").value;
+			let pic = document.querySelector("#poiPic").value;
 			
 			let Symbol;
 			
@@ -81,7 +82,7 @@ function makePoi(obj) {
 				Symbol = SimpleMarkerSymbol
 			}
 			
-			var graphic = new esri.Graphic(new esri.geometry.Point(mapPoint.x, mapPoint.y), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info));
+			var graphic = new esri.Graphic(new esri.geometry.Point(mapPoint.x, mapPoint.y), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info+'<img src='+pic+'>'));
 			poiLayer.add(graphic);
 		}
 	});

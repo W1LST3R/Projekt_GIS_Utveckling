@@ -34,10 +34,13 @@
 		
 		<div class="popup">
 		<button type="button" class="mapButton" onclick="makePoi(this)">makePoi</button>
+		<button type="button" class="mapButton" id="4">POI</button>
 		<span class="popuptext" id="myPopup">
 		
 			<input type="text" id="poiName" value="Namn för din poi..." onfocus="this.value=''">
 			<input type="text" id="poiInfo" value="Info för din poi..." onfocus="this.value=''">
+			<input type="text" id="poiPic" value="url för att visa bild i din poi..." onfocus="this.value=''">
+			
 			<select name="shapes" id="shape">
 				<option value="triangle">triangle</option>
 				<option value="circle">circle</option>

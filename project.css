@@ -23,6 +23,11 @@ header {
   padding-bottom: 10px;
 }
 
+.container {
+	display:flex;
+	justify-content:space-around;
+}
+
 .mapButton {
 	background-color:#e7e7e7;
 }
@@ -32,14 +37,16 @@ header {
 	cursor:pointer;
 }
 
+
+/* Nedanstående CSS tagen från: https://www.w3schools.com/howto/howto_js_popup.asp */
+
  /* Popup container */
 .popup {
   position: relative;
   display: inline-block;
-  cursor: pointer;
 }
 
-/* The actual popup (appears on top) */
+/* The actual popup (appears on bottom) */
 .popup .popuptext {
   visibility: hidden;
   width: 160px;
@@ -47,12 +54,13 @@ header {
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 8px 0;
+  padding: 8px;
   position: absolute;
   z-index: 1;
   top: 125%;
   left: 50%;
   margin-left: -80px;
+  text-align: left;
 }
 
 /* Popup arrow */
@@ -83,5 +91,4 @@ header {
 @keyframes fadeIn {
   from {opacity: 0;}
   to {opacity:1 ;}
-} 
-
+}

@@ -274,6 +274,7 @@ function makePOIs(pointData){
 		var info = poi.description;
 		var pic = poi.picture;
 		var logo = poi.logo;
+		var rights = poi.rights;
 		var point = new esri.geometry.Point(lng,lat);
 		
 		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
@@ -282,7 +283,7 @@ function makePOIs(pointData){
 				PictureMarkerSymbol.setWidth(20);
 				
 				var Symbol = PictureMarkerSymbol;
-	var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
+	var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'+rights));
 	pointLayer.add(graphic);
 	});
 	

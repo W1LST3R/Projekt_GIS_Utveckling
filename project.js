@@ -367,6 +367,58 @@ function makeLine(pointData) {
 	}
 }
 
+function makePOIs(pointData){
+	pointLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(pointLayer);
+	var allPOIs = new Array();
+
+	//ForEach loop genom JSON data 
+	dojo.forEach(pointData.poi, function(poi) {
+		var lng = poi.longitude;
+		var lat = poi.latitude;
+		var name = poi.name;
+		var info = poi.description;
+		var pic = poi.picture;
+		var logo = poi.logo;
+		var point = new esri.geometry.Point(lng,lat);
+		
+		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
+				PictureMarkerSymbol.setUrl(logo);
+				PictureMarkerSymbol.setHeight(20);
+				PictureMarkerSymbol.setWidth(20);
+				
+				var Symbol = PictureMarkerSymbol;
+	var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
+	pointLayer.add(graphic);
+	});
+	
+	
+	/*
+	//Highlight on hover
+	map.on("load", function(){
+        map.graphics.enableMouseEvents();
+        map.graphics.on("mouse-out", removeHighlight);
+    });
+	
+	pointLayer.on("mouse-over", function(evt){
+		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
+		highlightSymbol.style = "solid";
+		highlightSymbol.width = 5.5;
+		
+		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
+		
+		highlightSymbol.color = color;
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name));
+		map.graphics.add(highlightGraphic);
+	});
+	//End highlight on hover
+	
+	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	markers.push(graphic);
+	//markers[markers.length-1].hide();
+	pointLayer.add(markers[markers.length-1]);	*/
+}
+
 //Funktion för att ta bort highlight av led
 function removeHighlight() {
     map.graphics.clear();

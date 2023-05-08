@@ -92,3 +92,8 @@ header {
   from {opacity: 0;}
   to {opacity:1 ;}
 }
+
+.esriPopup .contentPane img {
+  image-orientation: from-image;
+  width: 100%;
+}

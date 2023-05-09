@@ -17,13 +17,6 @@
 <body class="claro">
 	<header>
 	<div class="container">
-		Food <span class="material-symbols-outlined">restaurant</span>
-		WC <span class="material-symbols-outlined">wc</span>
-		Info <span class="material-symbols-outlined">info</span>
-		Hiking <span class="material-symbols-outlined">hiking</span>
-		Fire <span class="material-symbols-outlined">local_fire_department</span>
-	</div>
-	<div class="container">
 		<button type="button" class="mapButton" id="1">Cykel leder</button>
 		
 		<button type="button" class="mapButton" id="2">Vandrings leder</button>
@@ -35,7 +28,43 @@
 		<button type="button" class="mapButton" id="3">Cykel och Vandrings leder</button>
 		
 		<div class="popup">
-		<button type="button" class="mapButton" onclick="makePoi(this)">Gör en egen markör</button>
+		<button type="button" class="mapButton" id="4" onclick="showPoi(this)">Sevärdigheter</button>
+		<span class="popuptext" id="poiPopup">
+			<div class="checkbox">
+				<p>Filtrera sevärdigheter</p>
+				<input type="checkbox" value="0" checked="true" onclick="hideShow(this)" id="toilet">
+				<label for="toilet">Toaletter <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/WC.jpg"></label>
+				<br />
+				<input type="checkbox" value="1" checked="true" onclick="hideShow(this)" id="fireplace">
+				<label for="fireplace">Eldplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Campfire.jpg"></label>
+				<br />
+				<input type="checkbox" value="2" checked="true" onclick="hideShow(this)" id="food">
+				<label for="food">Matplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Food.jpg"></label>
+				<br />
+				<input type="checkbox" value="3" checked="true" onclick="hideShow(this)" id="information">
+				<label for="information">Information <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Info.png"></label>
+				<br />
+				<input type="checkbox" value="4" checked="true" onclick="hideShow(this)" id="restArea">
+				<label for="restArea">Rastplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Bench.png"></label>
+				<br />
+				<input type="checkbox" value="5" checked="true" onclick="hideShow(this)" id="parking">
+				<label for="parking">Parkering <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Parking.jpg"></label>
+				<br />
+				<input type="checkbox" value="6" checked="true" onclick="hideShow(this)" id="waterPost">
+				<label for="waterPost">Vatten <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Water.jpg"></label>
+				<br />
+				<input type="checkbox" value="7" checked="true" onclick="hideShow(this)" id="windShelter">
+				<label for="windShelter">Vindskydd <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/WindShelter.jpg"></label>
+				<br />
+				<input type="checkbox" value="8" checked="true" onclick="hideShow(this)" id="cabin">
+				<label for="cabin">Stuga <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Cabin.png"></label>
+				<br />
+			</div>
+		</span>
+		</div>
+		
+		<div class="popup">
+		<button type="button" class="mapButton" onclick="makePoi(this)">Skapa en egen markör</button>
 		<span class="popuptext" id="myPopup">
 			<p style="color:black">Bestäm inställning för din markör och klicka sedan på kartan för att placera ut den.</p>
 			<input type="text" id="poiName" value="Namn för din markör..." onfocus="this.value=''">
@@ -52,9 +81,9 @@
 				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Parking.jpg">Parkering</option>
 				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Info.png">Info</option>
 				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/WC.jpg">WC</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Cabin.png">Stuga</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Water.jpg">Vatten post</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/WindShelter.jpg">Vindskydd</option>
+				<option style="background-image:url(http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Cabin.png);" value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Cabin.png">Stuga</option>
+                <option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/Water.jpg">Vatten post</option>
+                <option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/WindShelter.jpg">Vindskydd</option>
 				<!--<option value=""></option>-->
 			</select>
 			<select name="colors" id="color">

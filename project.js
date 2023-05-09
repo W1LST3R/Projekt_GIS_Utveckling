@@ -69,13 +69,16 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 				
 				Symbol = SimpleMarkerSymbol
 			}
-			
-			var graphic = new esri.Graphic(new esri.geometry.Point(currentLon, currentLat), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info + pic));
-
+			let stop = 0;
+			if(stop == 0) {
+				var graphic = new esri.Graphic(new esri.geometry.Point(currentLon, currentLat), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info + pic));
+				stop++;
+			}
 			poiLayer.add(graphic);
 			myPoiArr.push(graphic);
 		}
 	});
+	makeColor();
 	initButtons();
 	getPointData();
 });
@@ -85,28 +88,61 @@ Funktioner för hämtning  och bearbetning av JSON data
 *******************************************************/
 
 function getPointData() {
-	
-	//!!!OBS!!! SIMON ÄNDRADE ALLA DOJO.XHRGET TILL SYNC:"TRUE", DETTA FÖR ATT I VISSA FALL SÅ KOPPLADES INTE RÄTT DATA TILL RÄTT OBJEKT OSV.. FINNS KANSKE ANNAN LÖSNING
-
 	var filePath;
 	for(i = 1; i < 23; i++) {
-		filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Strecka"+ i + ".json";
+		filePath = "http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Strecka"+ i + ".json";
+		saveName(filePath.substring(filePath.lastIndexOf("/")+1));
 		var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+		//console.log(filePath);
 		dojo.xhrGet(pointData);
 	};
-	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/test.json";
-	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+	saveName("Biking_elevation161008.json");
+	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
+	dojo.xhrGet(pointData);
+
+	saveName("Walk_elevation_123547.json");
+	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
+	dojo.xhrGet(pointData);
+
+	saveName("Walk_elevation_151851.json");
+	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 	
-	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json";
-	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+	//för att ladda in poi array
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiToilet/poiToilet.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
 	dojo.xhrGet(pointData);
-	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json";
-	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiFirePlace/poiFirePlace.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
 	dojo.xhrGet(pointData);
-	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json";
-	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiFood/poiFood.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
 	dojo.xhrGet(pointData);
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiInformation/poiInformation.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiRestArea/poiRestArea.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiParking/poiParking.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiWaterPost/poiWaterPost.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiWindShelter/poiWindShelter.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);
+	
+	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiCabin/poiCabin.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);	
+}
+
+function saveName(nameToSave) {
+	nameArr.push(nameToSave);
+}
+
+function getName() {
+	return nameArr[nameArr.length-1];
 }
 
 //test
@@ -229,6 +265,59 @@ function makeLine(pointData) {
 	}
 }
 
+function makePOIs(pointData){
+	pointLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(pointLayer);
+	var allPOIs = new Array();
+
+	//ForEach loop genom JSON data 
+	dojo.forEach(pointData.poi, function(poi) {
+		var lng = poi.longitude;
+		var lat = poi.latitude;
+		var name = poi.name;
+		var info = poi.description;
+		var pic = poi.picture;
+		var logo = poi.logo;
+		var rights = poi.rights;
+		var point = new esri.geometry.Point(lng,lat);
+		
+		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
+				PictureMarkerSymbol.setUrl(logo);
+				PictureMarkerSymbol.setHeight(20);
+				PictureMarkerSymbol.setWidth(20);
+				
+				var Symbol = PictureMarkerSymbol;
+	var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'+rights));
+	pointLayer.add(graphic);
+	});
+	
+	
+	/*
+	//Highlight on hover
+	map.on("load", function(){
+        map.graphics.enableMouseEvents();
+        map.graphics.on("mouse-out", removeHighlight);
+    });
+	
+	pointLayer.on("mouse-over", function(evt){
+		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
+		highlightSymbol.style = "solid";
+		highlightSymbol.width = 5.5;
+		
+		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
+		
+		highlightSymbol.color = color;
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name));
+		map.graphics.add(highlightGraphic);
+	});
+	//End highlight on hover
+	
+	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
+	markers.push(graphic);
+	//markers[markers.length-1].hide();
+	pointLayer.add(markers[markers.length-1]);	*/
+}
+
 //Funktion för att ta bort highlight av led
 function removeHighlight() {
     map.graphics.clear();
@@ -266,7 +355,7 @@ var pressedWalkingAndBikingTrails = false; //variabel för att hålla reda på o
 //Funktion för visning av trails
 function showTrail(buttonIndex) {
 
-	if(buttonIndex.id != 5) {
+	if(buttonIndex.id != 4) {
 		
 		//För cykel leder
 		if(buttonIndex.id == 1 && !pressedBikeTrails) {
@@ -363,55 +452,39 @@ function makePoi(obj) {
 	map.addLayer(poiLayer);
 }
 
-var allPOIs = new Array(); //Global array för POIs
-
-function makePOIs(pointData){
-	let poiLayer = new esri.layers.GraphicsLayer();
-	map.addLayer(poiLayer);
-
-	//ForEach loop genom JSON data 
-	dojo.forEach(pointData.poi, function(poi) {
-		var lng = poi.longitude;
-		var lat = poi.latitude;
-		var name = poi.name;
-		var info = poi.description;
-		var pic = poi.picture;
-		var logo = poi.logo;
-		var point = new esri.geometry.Point(lng,lat);
-		
-		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
-		PictureMarkerSymbol.setUrl(logo);
-		PictureMarkerSymbol.setHeight(20);
-		PictureMarkerSymbol.setWidth(20);
-				
-		var Symbol = PictureMarkerSymbol;
-		var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
-		poiLayer.add(graphic);
-	});
-	allPOIs.push(poiLayer);
-}
-
-var showPoiPressed = false;
-
-function showPoi(obj) {
-	var popup = document.getElementById("poiPopup");
-	popup.classList.toggle("show");
-	
-	/*
-	if(!showPoiPressed) {
-		showPoiPressed = true;
-		obj.style.backgroundColor = "lightgreen";
-	} else {
-		showPoiPressed = false;
-		obj.style.backgroundColor = "#e7e7e7";
-	}
-	*/
-}
-
+/*
 function hideShow(obj) {
-	if(!obj.checked) allPOIs[obj.value].hide();
-	else allPOIs[obj.value].show();
+	if(pressedEle) {
+		if(obj.id == "walk") {
+			if(obj.checked == false) {
+				for(let i = 0; i < walkingMarkers.length; i++) {
+					walkingMarkers[i].hide();
+				}
+				//obj.checked = false;
+			} else {
+				for(let i = 0; i < walkingMarkers.length; i++) {
+					walkingMarkers[i].show();
+				}
+				//obj.checked = true;
+			}
+		} else {
+			if(obj.checked == false) {
+				for(let i = 0; i < bikingMarkers.length; i++) {
+					bikingMarkers[i].hide();
+				}
+				//obj.checked = false;
+			} else {
+				for(let i = 0; i < bikingMarkers.length; i++) {
+					bikingMarkers[i].show();
+				}
+				//obj.checked = true;
+			}
+		}
+	} else {
+		obj.checked = false;
+	}
 }
+*/
 /*
 function active() {
 	let bike = document.querySelector("#bike");

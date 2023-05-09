@@ -88,26 +88,29 @@ Funktioner för hämtning  och bearbetning av JSON data
 *******************************************************/
 
 function getPointData() {
+	
+	//!!!OBS!!! SIMON ÄNDRADE ALLA DOJO.XHRGET TILL SYNC:"TRUE", DETTA FÖR ATT I VISSA FALL SÅ KOPPLADES INTE RÄTT DATA TILL RÄTT OBJEKT OSV.. FINNS KANSKE ANNAN LÖSNING
+
 	var filePath;
 	for(i = 1; i < 23; i++) {
-		filePath = "http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Strecka"+ i + ".json";
-		saveName(filePath.substring(filePath.lastIndexOf("/")+1));
+		filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Strecka"+ i + ".json";
 		var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
-		//console.log(filePath);
 		dojo.xhrGet(pointData);
 	};
-	saveName("Biking_elevation161008.json");
-	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
-	dojo.xhrGet(pointData);
-
-	saveName("Walk_elevation_123547.json");
-	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
-	dojo.xhrGet(pointData);
-
-	saveName("Walk_elevation_151851.json");
-	pointData = {url:"http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json", handleAs:"json", sync:"true", content:{}, load:makeLine};
+	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/test.json";
+	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 	
+	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json";
+	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+	dojo.xhrGet(pointData);
+	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json";
+	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+	dojo.xhrGet(pointData);
+	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json";
+	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
+	dojo.xhrGet(pointData);
+
 	//för att ladda in poi array
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiToilet/poiToilet.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
 	dojo.xhrGet(pointData);
@@ -134,15 +137,7 @@ function getPointData() {
 	dojo.xhrGet(pointData);
 	
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiCabin/poiCabin.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
-	dojo.xhrGet(pointData);	
-}
-
-function saveName(nameToSave) {
-	nameArr.push(nameToSave);
-}
-
-function getName() {
-	return nameArr[nameArr.length-1];
+	dojo.xhrGet(pointData);
 }
 
 //test

@@ -69,16 +69,13 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 				
 				Symbol = SimpleMarkerSymbol
 			}
-			let stop = 0;
-			if(stop == 0) {
-				var graphic = new esri.Graphic(new esri.geometry.Point(currentLon, currentLat), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info + pic));
-				stop++;
-			}
+			
+			var graphic = new esri.Graphic(new esri.geometry.Point(currentLon, currentLat), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info + pic));
+
 			poiLayer.add(graphic);
 			myPoiArr.push(graphic);
 		}
 	});
-	makeColor();
 	initButtons();
 	getPointData();
 });
@@ -260,59 +257,6 @@ function makeLine(pointData) {
 	}
 }
 
-function makePOIs(pointData){
-	pointLayer = new esri.layers.GraphicsLayer();
-	map.addLayer(pointLayer);
-	var allPOIs = new Array();
-
-	//ForEach loop genom JSON data 
-	dojo.forEach(pointData.poi, function(poi) {
-		var lng = poi.longitude;
-		var lat = poi.latitude;
-		var name = poi.name;
-		var info = poi.description;
-		var pic = poi.picture;
-		var logo = poi.logo;
-		var rights = poi.rights;
-		var point = new esri.geometry.Point(lng,lat);
-		
-		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
-				PictureMarkerSymbol.setUrl(logo);
-				PictureMarkerSymbol.setHeight(20);
-				PictureMarkerSymbol.setWidth(20);
-				
-				var Symbol = PictureMarkerSymbol;
-	var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'+rights));
-	pointLayer.add(graphic);
-	});
-	
-	
-	/*
-	//Highlight on hover
-	map.on("load", function(){
-        map.graphics.enableMouseEvents();
-        map.graphics.on("mouse-out", removeHighlight);
-    });
-	
-	pointLayer.on("mouse-over", function(evt){
-		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
-		highlightSymbol.style = "solid";
-		highlightSymbol.width = 5.5;
-		
-		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
-		
-		highlightSymbol.color = color;
-		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name));
-		map.graphics.add(highlightGraphic);
-	});
-	//End highlight on hover
-	
-	//Sparar aktuell led i den globala Arrayen markers, gÃ¶mmer den, och lÃ¤gger sedan till den pÃ¥ kartlagret
-	markers.push(graphic);
-	//markers[markers.length-1].hide();
-	pointLayer.add(markers[markers.length-1]);	*/
-}
-
 //Funktion för att ta bort highlight av led
 function removeHighlight() {
     map.graphics.clear();
@@ -350,7 +294,7 @@ var pressedWalkingAndBikingTrails = false; //variabel för att hålla reda på o
 //Funktion för visning av trails
 function showTrail(buttonIndex) {
 
-	if(buttonIndex.id != 4) {
+	if(buttonIndex.id != 5) {
 		
 		//För cykel leder
 		if(buttonIndex.id == 1 && !pressedBikeTrails) {
@@ -447,39 +391,55 @@ function makePoi(obj) {
 	map.addLayer(poiLayer);
 }
 
-/*
-function hideShow(obj) {
-	if(pressedEle) {
-		if(obj.id == "walk") {
-			if(obj.checked == false) {
-				for(let i = 0; i < walkingMarkers.length; i++) {
-					walkingMarkers[i].hide();
-				}
-				//obj.checked = false;
-			} else {
-				for(let i = 0; i < walkingMarkers.length; i++) {
-					walkingMarkers[i].show();
-				}
-				//obj.checked = true;
-			}
-		} else {
-			if(obj.checked == false) {
-				for(let i = 0; i < bikingMarkers.length; i++) {
-					bikingMarkers[i].hide();
-				}
-				//obj.checked = false;
-			} else {
-				for(let i = 0; i < bikingMarkers.length; i++) {
-					bikingMarkers[i].show();
-				}
-				//obj.checked = true;
-			}
-		}
-	} else {
-		obj.checked = false;
-	}
+var allPOIs = new Array(); //Global array för POIs
+
+function makePOIs(pointData){
+	let poiLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(poiLayer);
+
+	//ForEach loop genom JSON data 
+	dojo.forEach(pointData.poi, function(poi) {
+		var lng = poi.longitude;
+		var lat = poi.latitude;
+		var name = poi.name;
+		var info = poi.description;
+		var pic = poi.picture;
+		var logo = poi.logo;
+		var point = new esri.geometry.Point(lng,lat);
+		
+		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
+		PictureMarkerSymbol.setUrl(logo);
+		PictureMarkerSymbol.setHeight(20);
+		PictureMarkerSymbol.setWidth(20);
+				
+		var Symbol = PictureMarkerSymbol;
+		var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
+		poiLayer.add(graphic);
+	});
+	allPOIs.push(poiLayer);
 }
-*/
+
+var showPoiPressed = false;
+
+function showPoi(obj) {
+	var popup = document.getElementById("poiPopup");
+	popup.classList.toggle("show");
+	
+	/*
+	if(!showPoiPressed) {
+		showPoiPressed = true;
+		obj.style.backgroundColor = "lightgreen";
+	} else {
+		showPoiPressed = false;
+		obj.style.backgroundColor = "#e7e7e7";
+	}
+	*/
+}
+
+function hideShow(obj) {
+	if(!obj.checked) allPOIs[obj.value].hide();
+	else allPOIs[obj.value].show();
+}
 /*
 function active() {
 	let bike = document.querySelector("#bike");

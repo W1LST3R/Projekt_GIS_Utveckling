@@ -174,7 +174,29 @@ function makePoint(pointData) {
 		testCount++;
 		});
 }
-
+//Funktionen kalkyerar längden mellan två punkter i WGS84 med hjälp av Haversine formulan
+function calculateDistance(lat1, lon1, lat2, lon2) { 
+	const earthRadius = 6371; //Jordens radie i km
+	//Konverterar grader till radianer
+	const degToRad = (degrees) => (degrees * Math.PI) / 180;
+	//Konverterar latitude och longitude till radianer
+	const latRad1 = degToRad(lat1);
+	const lonRad1 = degToRad(lon1);
+	const latRad2 = degToRad(lat2);
+	const lonRad2 = degToRad(lon2);
+	//Kalkylerar skillnaderna mellan latituderna och longituderna
+	const latDiff = latRad2 - latRad1;
+	const lonDiff = lonRad2 - lonRad1;
+	//Använder Haversine formula
+	const a =
+	  Math.sin(latDiff / 2) ** 2 +
+	  Math.cos(latRad1) * Math.cos(latRad2) * Math.sin(lonDiff / 2) ** 2;
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	//Kalkylerar längden
+	const distance = earthRadius * c;
+  	//Längden i km
+	return distance; 
+}
 function makeLine(pointData) {
 	count++;
 	pointLayer = new esri.layers.GraphicsLayer();
@@ -192,6 +214,15 @@ function makeLine(pointData) {
 		var lat = posts.latitude;
 		var point = new esri.geometry.Point(lng, lat);
 		path.push(point);
+		if(flag) {
+			point1 = path.pop();
+			point2 = path.pop();
+			length += calculateDistance(point1.y, point1.x, point2.y, point2.x);
+			path.push(point2);
+			path.push(point1);
+		} else {
+			flag = true;
+		}
 	});
 	
 	var poly = new esri.geometry.Polyline();
@@ -232,7 +263,7 @@ function makeLine(pointData) {
 		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
 
 		highlightSymbol.color = color;
-		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name));
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name, length.toFixed(1) + " km"));
 		map.graphics.add(highlightGraphic);
 	});
 	//End highlight on hover

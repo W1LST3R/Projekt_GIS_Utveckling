@@ -204,7 +204,7 @@ function makeLine(pointData) {
 		
 	var path = new Array();
 	var name = pointData.name;
-	
+	var length;
 	//TEMP
 	if(pointData.name === undefined) name = "E no name specified in JSON file"
 

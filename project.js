@@ -537,4 +537,69 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 	return distance; 
 }
 
+function filterPoi(obj) {
+    var led = document.querySelector("#led");
+    var distance = document.querySelector("#distance");
+	
+
+    var popup = document.getElementById("myFilter");
+    popup.classList.toggle("show");
+
+    if (!filterButton) {
+        filterButton = true;
+        obj.style.backgroundColor = "lightgreen";
+    } else {
+        filterButton = false;
+        obj.style.backgroundColor = "#e7e7e7";
+        led.value = "Välj en led";
+        distance.value = "";
+    }
+
+    poiLayer = new esri.layers.GraphicsLayer();
+    map.addLayer(poiLayer);
+}
+
+
+function filtrate(){
+	distance = document.getElementById("distance").value;
+	led = document.getElementById("led").value;
+	ledMarker = null;
+	
+	
+//console.log(markers[0][0]);
+	for(var i = 0; i < markers.length; i++){
+	for(var j = 0; j < markers[i].length; j++){
+	if (markers[i][j].symbol.name == led){
+		ledMarker = markers[i][j];
+		break;
+	}
+	}
+	if(ledMarker != null)
+		break;
+	}
+	
+	console.log(ledMarker);
+}
+
+function generateOptions(pointData){
+
+
+if (pointData==undefined){
+	pointData = "test.json";
+}	
+var option = document.createElement("option");
+
+// Sätt attributet "value"
+option.value = pointData;
+
+// Sätt innehållet (texten) på <option>
+option.textContent = pointData;
+
+// Lägg till <option> i en <select>
+var select = document.getElementById("led");
+select.appendChild(option);
+
+	
+}
+
 

@@ -309,12 +309,12 @@ function makeLine(pointData) {
 	graphic.id = count;
 	
 	//Sparar aktuell led i sin globala Array, gömmer den, och lägger sedan till den på kartlagret
-	if(name.charAt(0) == "E" || name.charAt(0) == "t") {
+	if(etapp.charAt(0) == "E" || etapp.charAt(0) == "t") {
 		walkingAndBikingMarkers.push(graphic);
 		walkingAndBikingMarkers[walkingAndBikingMarkers.length-1].hide();
 		pointLayer.add(walkingAndBikingMarkers[walkingAndBikingMarkers.length-1]);
 	}
-	else if(name.charAt(0) == "W") {
+	else if(etapp.charAt(0) == "W") {
 		walkingMarkers.push(graphic);
 		walkingMarkers[walkingMarkers.length-1].hide();
 		pointLayer.add(walkingMarkers[walkingMarkers.length-1]);

@@ -1,29 +1,11 @@
-		/*serverData.collection("POIs").get().then((pdata) => {
-		pdata.forEach((doc) => {
-			console.log(`${doc.id} => ${doc.data()}`);
-		});
-	});*/
-
-
-	/*var dataPoi = serverData.collection("POIs").get().then((pdata) => {
-		pdata.forEach((doc) => {
-			console.log(`${doc.id} => ${doc.data()}`);
-		});
-	});
-	pointData = {dataPoi, handleAs:"json", sync:"true", content:{}, load:makePOIs};
-	dojo.xhrGet(pointData);*/
-
 /*******************************************************
 Globala Variabler
 *******************************************************/
-
-import serverData from "./firebase.js"
-import pdata from "./firebase.js"
 var map;
 var count = 0;
-var nameArr = new Array();
 var pointLayer;
 var poiLayer;
+let myTrailLayer;
 var walkingAndBikingMarkers = new Array();
 var walkingMarkers = new Array();
 var bikingMarkers = new Array();
@@ -31,13 +13,18 @@ var poiBtnPressed = false;
 let myPoiArr = new Array(); //Global array för användarsskapade pois
 let currentLat;
 let currentLon;
+var markers = new Array();
+markers = [walkingAndBikingMarkers, walkingMarkers, bikingMarkers];
+var myTrailPath = new Array();
+var myTrailArr = new Array();
+var filterButton = false;
 
 require(["esri/map", "esri/layers/GraphicsLayer", "esri/InfoTemplate", 
 "esri/geometry/Point", "esri/symbols/PictureMarkerSymbol", "esri/graphic", 
 "esri/Color", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", 
 "esri/geometry/Polyline", "esri/symbols/SimpleFillSymbol","dojo/on", 
 "esri/geometry/Multipoint", "dojo/domReady!"], 
-function(Map, On) {
+function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, Color, SimpleSymbol, SimpleLineSymbol, Polyline, SimpleFillSymbol, On, Multipoint) {
 	map = new Map("mapDiv", {
 		basemap:"streets",
 		center: [17.512102147310593, 60.16792682157719],
@@ -54,26 +41,10 @@ function(Map, On) {
 		if(poiBtnPressed) {
 			
 			let shape = document.querySelector("#shape").value;
-			let color = document.querySelector("#color").value;
+			let color = document.querySelector("#colorPoi").value;
 			let info = document.querySelector("#poiInfo").value;
 			let namn = document.querySelector("#poiName").value;
 			let pic = document.querySelector("#poiPic").value;
-
-			serverData.collection("poiDataPerm").add({
-				latitude : currentLat,
-				Longitude : currentLon,
-				shape : shape,
-				color : color,
-				info : info,
-				name : namn,
-				pic : pic
-			})
-			.then((docRef) => {
-				console.log("Document written with ID: ", docRef.id);
-			})
-			.catch((error) => {
-				console.error("Error adding document: ", error);
-			});
 						
 			let checkPic = /^http/i;
 
@@ -101,7 +72,7 @@ function(Map, On) {
 				SimpleMarkerSymbol.style = shape;
 				SimpleMarkerSymbol.size = 14;
 				
-				Symbol = SimpleMarkerSymbol
+				Symbol = SimpleMarkerSymbol;
 			}
 			
 			var graphic = new esri.Graphic(new esri.geometry.Point(currentLon, currentLat), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info + pic));
@@ -109,8 +80,31 @@ function(Map, On) {
 			poiLayer.add(graphic);
 			myPoiArr.push(graphic);
 		}
+		
+		if(makeTrailPressed) {
+			
+			myTrailLayer = new esri.layers.GraphicsLayer();
+			map.addLayer(myTrailLayer);
+			
+			var point = new esri.geometry.Point(currentLon, currentLat);
+			myTrailPath.push(point);
+			var SimpleMarkerSymbol = new esri.symbol.SimpleMarkerSymbol();
+				SimpleMarkerSymbol.color = "rgba(255, 255, 255, 0.8)";
+				SimpleMarkerSymbol.style = "solid";
+				SimpleMarkerSymbol.size = 10;
+				
+				Symbol = SimpleMarkerSymbol;
+			
+			var graphic = new esri.Graphic(new esri.geometry.Point(currentLon, currentLat), Symbol).setInfoTemplate(new esri.InfoTemplate("En markör"));
+			
+			myTrailLayer.add(graphic);
+			myTrailArr.push(myTrailLayer);
+		}
 	});
-	initButtons();
+	
+	pointLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(pointLayer);
+	
 	getPointData();
 });
 
@@ -171,14 +165,6 @@ function getPointData() {
 	dojo.xhrGet(pointData);
 }
 
-//test
-let colorArr = new Array();
-function makeColor() {
-	for(var i = 0; i < 20; i++) {
-		colorArr[i] = randomColor();
-	}
-};
-
 //För punkter
 function makePoint(pointData) {
 	poiLayer = new esri.layers.GraphicsLayer();
@@ -188,63 +174,38 @@ function makePoint(pointData) {
 	let color = colorArr.pop();
 
 	dojo.forEach(pointData.posts, function(poi) {
-		/*var lng = poi.lon;
+		var lng = poi.lon;
 		var lat = poi.lat;
-		var name = poi.name;*/
-		
-		//För test
-		var lng = poi.longitude;
-		var lat = poi.latitude;
-		//end
+		var name = poi.name;
 		
 		var point = new esri.geometry.Point(lng, lat);
 		var SimpleMarkerSymbol = new esri.symbol.SimpleMarkerSymbol();
-		SimpleMarkerSymbol.color = color;
+		SimpleMarkerSymbol.color = randomColor();
 		SimpleMarkerSymbol.style = "triangle";
 		SimpleMarkerSymbol.size = 14;
-		//console.log(testCount)
+		
 		var graphic = new esri.Graphic(point, SimpleMarkerSymbol).setInfoTemplate(new esri.InfoTemplate(testCount, lng + ", " +lat));
 		poiLayer.add(graphic);
 		testCount++;
-		});
+	});
 }
-//Funktionen kalkyerar längden mellan två punkter i WGS84 med hjälp av Haversine formulan
-function calculateDistance(lat1, lon1, lat2, lon2) { 
-	const earthRadius = 6371; //Jordens radie i km
-	//Konverterar grader till radianer
-	const degToRad = (degrees) => (degrees * Math.PI) / 180;
-	//Konverterar latitude och longitude till radianer
-	const latRad1 = degToRad(lat1);
-	const lonRad1 = degToRad(lon1);
-	const latRad2 = degToRad(lat2);
-	const lonRad2 = degToRad(lon2);
-	//Kalkylerar skillnaderna mellan latituderna och longituderna
-	const latDiff = latRad2 - latRad1;
-	const lonDiff = lonRad2 - lonRad1;
-	//Använder Haversine formula
-	const a =
-	  Math.sin(latDiff / 2) ** 2 +
-	  Math.cos(latRad1) * Math.cos(latRad2) * Math.sin(lonDiff / 2) ** 2;
-	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	//Kalkylerar längden
-	const distance = earthRadius * c;
-  	//Längden i km
-	return distance; 
-}
+
+//För linjer/leder
 function makeLine(pointData) {
-	count++;
-	pointLayer = new esri.layers.GraphicsLayer();
-	map.addLayer(pointLayer);
 		
 	var path = new Array();
 	var name = pointData.name;
+	var etapp = pointData.etapp;
+	generateOptions(name);
+	
+	//TEMP
+	if(pointData.etapp === undefined) etapp = "E no name specified in JSON file"
+	
+	var length = 0;
 	var flag = false;
 	var point1;
 	var point2;
-	var length = 0;
-	//TEMP
-	if(pointData.name === undefined) name = "E no name specified in JSON file"
-
+	
 	//ForEach loop genom JSON data 
 	dojo.forEach(pointData.posts, function(posts) {
 		var lng = posts.longitude;
@@ -252,29 +213,33 @@ function makeLine(pointData) {
 		var point = new esri.geometry.Point(lng, lat);
 		path.push(point);
 		if(flag) {
-			point1 = path.pop();
-			point2 = path.pop();
-			length += calculateDistance(point1.y, point1.x, point2.y, point2.x);
-			path.push(point2);
-			path.push(point1);
-		} else {
-			flag = true;
-		}
+            point1 = path.pop();
+            point2 = path.pop();
+            length += calculateDistance(point1.y, point1.x, point2.y, point2.x);
+            path.push(point2);
+            path.push(point1);
+        } else {
+            flag = true;
+        }
 	});
 	
+	//Skapa polyline
 	var poly = new esri.geometry.Polyline();
 	poly.addPath(path);
+	
+	//Skapa symbolen för polylinen
 	var symbol = new esri.symbol.SimpleLineSymbol();
-	symbol.width = 4;
+	symbol.width = 5;
 	symbol.name = name;
+	symbol.distance = Number(length);
 	
 	//Style for biking and walking trails
-	if(name.charAt(0) == "E" || name.charAt(0) == "t") {
+	if(etapp.charAt(0) == "E" || etapp.charAt(0) == "t") {
 		symbol.color = "rgba(78,123,212,0.8)";
 		symbol.style = "dash";
 	}
 	//Style for walking trails
-	else if(name.charAt(0) == "W") {
+	else if(etapp.charAt(0) == "W") {
 		symbol.color = "rgba(252,140,35,0.8)";
 		symbol.style = "dot";
 	} 
@@ -288,9 +253,8 @@ function makeLine(pointData) {
 	map.on("load", function(){
         map.graphics.enableMouseEvents();
         map.graphics.on("mouse-out", removeHighlight);
-
     });
-
+	
 	pointLayer.on("mouse-over", function(evt){
 		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
 		highlightSymbol.style = "solid";
@@ -300,13 +264,18 @@ function makeLine(pointData) {
 		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
 
 		highlightSymbol.color = color;
-		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name + " " + pointData.etapp, length.toFixed(1) + " km"));
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name, "Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång"));
 		map.graphics.add(highlightGraphic);
+		
+		map.infoWindow.setTitle(evt.graphic.symbol.name);
+        map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång");
+		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
 	});
 	//End highlight on hover
 	
+	//Skapa det grafiska objektet med polyline och symbolen
 	var graphic = new esri.Graphic(poly, symbol);
-	graphic.id = count;
+	graphic.id = count++;
 	
 	//Sparar aktuell led i sin globala Array, gömmer den, och lägger sedan till den på kartlagret
 	if(etapp.charAt(0) == "E" || etapp.charAt(0) == "t") {
@@ -328,6 +297,7 @@ function makeLine(pointData) {
 //Funktion för att ta bort highlight av led
 function removeHighlight() {
     map.graphics.clear();
+	map.infoWindow.hide();
 }
 	
 //Funktion för att generera ett slumpmässigt rgba värde
@@ -344,79 +314,52 @@ function random() {
 Funktioner för knappar och hantering av knapptryck
 *******************************************************/
 
-//Initiering av knappar och event listeners
-function initButtons(){
-	require(["dojo/on"], function(on){
-		dojo.query(".mapButton").forEach(function(entry, i){ 
-			entry.addEventListener("click", function() {				
-				showTrail(entry);
-			}); 
-		}); 
-	}); 
-}
-
-var pressedBikeTrails = false; //variabel för att hålla reda på om man har klickat på visning av cykel leder
-var pressedWalkTrails = false; //variabel för att hålla reda på om man har klickat på visning av vandrings leder
-var pressedWalkingAndBikingTrails = false; //variabel för att hålla reda på om man har klickat på visning av cykel och vandrings leder
-
-//Funktion för visning av trails
-function showTrail(buttonIndex) {
-
-	if(buttonIndex.id != 5) {
-		
-		//För cykel leder
-		if(buttonIndex.id == 1 && !pressedBikeTrails) {
-			for(let i = 0; i < bikingMarkers.length; i++) {
-				bikingMarkers[i].show();
-			}
-			pressedBikeTrails = true;
-			buttonIndex.style.backgroundColor = "lightgreen";
-		} else if(buttonIndex.id == 1 && pressedBikeTrails){
-			for(let i = 0; i < bikingMarkers.length; i++) {
-				bikingMarkers[i].hide();
-			}
-			pressedBikeTrails = false;
-			buttonIndex.style.backgroundColor = "#e7e7e7";
-		} 
-		//End
-
-		//För vandrings leder
-		if(buttonIndex.id == 2 && !pressedWalkTrails) {
-			for(let i = 0; i < walkingMarkers.length; i++) {
-				walkingMarkers[i].show();
-			}
-			pressedWalkTrails = true;
-			buttonIndex.style.backgroundColor = "lightgreen";
-		} else if(buttonIndex.id == 2 && pressedWalkTrails){
-			for(let i = 0; i < walkingMarkers.length; i++) {
-				walkingMarkers[i].hide();
-			}
-			pressedWalkTrails = false;
-			buttonIndex.style.backgroundColor = "#e7e7e7";
-		}
-		//End
-		
-		//För cykel och vandrings leder
-		if(buttonIndex.id == 3 && !pressedWalkingAndBikingTrails) {
-			for(let i = 0; i < walkingAndBikingMarkers.length; i++) {
-				walkingAndBikingMarkers[i].show();
-			}
-			pressedWalkingAndBikingTrails = true;
-			buttonIndex.style.backgroundColor = "lightgreen";
-		} else if(buttonIndex.id == 3 && pressedWalkingAndBikingTrails){
-			for(let i = 0; i < walkingAndBikingMarkers.length; i++) {
-				walkingAndBikingMarkers[i].hide();
-			}
-			pressedWalkingAndBikingTrails = false;
-			buttonIndex.style.backgroundColor = "#e7e7e7";
-		}
-		//End
-		
-	} else {
-		alert("Klicka på en knapp för att visa leder");
+function toggleTrails(source) {
+	
+	checkboxes = document.getElementsByName("trailCheck");
+	
+	for(let i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = source.checked;
+		showTrail(checkboxes[i])
 	}
 }
 
+//Funktion för att visa verktygslådan för att visa leder
+function showTrailPopup() {
+	var popup = document.getElementById("trailPopup");
+	popup.classList.toggle("show");
+}
+
+//Funktion för visning av trails
+function showTrail(obj) {
+	if(!obj.checked) markers[obj.value].forEach(arrElem => arrElem.hide());
+	else markers[obj.value].forEach(arrElem => arrElem.show());
+}
+
+
+//Funktion för att visa verktygslådan för att skapa egna POIs
+function showPoi(obj) {
+	var popup = document.getElementById("poiPopup");
+	popup.classList.toggle("show");
+	
+}
+
+//Funktion för att visa/gömma utsatta POIs på kartan (gäller inte användarsskapade pois)
+function hideShow(obj) {
+	if(!obj.checked) allPOIs[obj.value].hide();
+	else allPOIs[obj.value].show();
+}
+
+//Funktion för att visa/gömma ALLA utsatta POIs (gäller inte användarsskapade pois)
+function togglePois(source) {
+	
+	checkboxes = document.getElementsByName("poiCheck");
+	
+	for(let i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = source.checked;
+		hideShow(checkboxes[i])
+	}
+}
 /*******************************************************
 Funktioner för POI
 *******************************************************/
@@ -433,7 +376,7 @@ function removeMyPoi() {
 function makePoi(obj) {
 	
 	let shape = document.querySelector("#shape");
-	let color = document.querySelector("#color");
+	let color = document.querySelector("#colorPoi");
 	let info = document.querySelector("#poiInfo");
 	let namn = document.querySelector("#poiName");
 	let pic = document.querySelector("#poiPic");
@@ -460,9 +403,10 @@ function makePoi(obj) {
 }
 
 var allPOIs = new Array(); //Global array för POIs
+var poiCount = 0;
 
 function makePOIs(pointData){
-	let poiLayer = new esri.layers.GraphicsLayer();
+	poiLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(poiLayer);
 
 	//ForEach loop genom JSON data 
@@ -481,44 +425,116 @@ function makePOIs(pointData){
 		PictureMarkerSymbol.setWidth(20);
 				
 		var Symbol = PictureMarkerSymbol;
+		Symbol.name = name;
+		Symbol.info = info;
+		Symbol.pic = pic;
+		Symbol.logo = logo;
 		var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
+		graphic.id = poiCount++;
 		poiLayer.add(graphic);
 	});
+	
 	allPOIs.push(poiLayer);
 }
 
-var showPoiPressed = false;
+/***********************************************
+Gör en egen led
+***********************************************/
 
-function showPoi(obj) {
-	var popup = document.getElementById("poiPopup");
+var makeTrailPressed = false;
+
+//Funktion för att visa verktygslådan för användarsskapade leder
+function makeTrail() {
+	
+	var popup = document.getElementById("myTrail");
 	popup.classList.toggle("show");
 	
-	/*
-	if(!showPoiPressed) {
-		showPoiPressed = true;
+	let obj = document.getElementById("trailButton");
+	
+	if(!makeTrailPressed) {
+		makeTrailPressed = true;
 		obj.style.backgroundColor = "lightgreen";
 	} else {
-		showPoiPressed = false;
+		makeTrailPressed = false;
 		obj.style.backgroundColor = "#e7e7e7";
 	}
-	*/
 }
 
-function hideShow(obj) {
-	if(!obj.checked) allPOIs[obj.value].hide();
-	else allPOIs[obj.value].show();
-}
-/*
-function active() {
-	let bike = document.querySelector("#bike");
-	let walk = document.querySelector("#walk");
+//Funktion för att generera den användarsskapade leden på kartan
+function makeThisTrail() {
 	
-	if(!pressedEle) {
-		bike.checked = true;
-		walk.checked = true;
-	} else {
-		bike.checked = false;
-		walk.checked = false;
+	let typeOfTrail = document.querySelector("#trails");
+	let index = Number(typeOfTrail.value);
+	let color = markers[index][0].symbol.color;
+	let style = markers[index][0].symbol.style;
+	let width = markers[index][0].symbol.width;
+	let name = document.querySelector("#trailName").value;
+	
+	if(name == "" || name == "Namn för din led...") name = "Min led";
+	
+	var poly = new esri.geometry.Polyline();
+	poly.addPath(myTrailPath);
+
+	var symbol = new esri.symbol.SimpleLineSymbol();
+	symbol.width = width;
+	symbol.color = color;
+	symbol.style = style;
+	symbol.name = name;
+	
+	var length = 0;
+	var flag = false;
+	var point1;
+	var point2;
+	
+	for(let i = 0; i < myTrailPath.length; i++) {
+		if(flag) {
+            point1 = myTrailPath[i-1];
+            point2 = myTrailPath[i];
+            length += calculateDistance(point1.y, point1.x, point2.y, point2.x);
+        } else {
+            flag = true;
+        }
 	}
+	
+	symbol.distance = Number(length);
+	
+	let graphic = new esri.Graphic(poly, symbol);
+	
+	markers[index].push(graphic);
+	pointLayer.add(graphic);
+
+	for(let i = 0; i < myTrailArr.length; i++) {
+		myTrailArr[i].hide();
+	}
+	myTrailArr = [];
+	myTrailPath = [];
+	makeTrail();
 }
-*/
+
+
+
+//Funktionen kalkyerar längden mellan två punkter i WGS84 med hjälp av Haversine formulan
+function calculateDistance(lat1, lon1, lat2, lon2) { 
+	const earthRadius = 6371; //Jordens radie i km
+	//Konverterar grader till radianer
+	const degToRad = (degrees) => (degrees * Math.PI) / 180;
+	//Konverterar latitude och longitude till radianer
+	const latRad1 = degToRad(lat1);
+	const lonRad1 = degToRad(lon1);
+	const latRad2 = degToRad(lat2);
+	const lonRad2 = degToRad(lon2);
+	//Kalkylerar skillnaderna mellan latituderna och longituderna
+	const latDiff = latRad2 - latRad1;
+	const lonDiff = lonRad2 - lonRad1;
+	//Använder Haversine formula
+	const a =
+	  Math.sin(latDiff / 2) ** 2 +
+	  Math.cos(latRad1) * Math.cos(latRad2) * Math.sin(lonDiff / 2) ** 2;
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	//Kalkylerar längden
+	const distance = earthRadius * c;
+  	//Längden i km
+	return distance; 
+}
+
+

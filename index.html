@@ -130,6 +130,17 @@
 		
 	</div>
 		
+		<div class="popup">
+    <button type="button" class="mapButton" onclick="filterPoi(this)">Filtrering av POIs baserat på geografiskt avstånd.</button>
+    <span class="popuptext" id="myFilter">
+        <select name="led" id="led">
+            <option selected disabled>Välj en led</option>
+        </select>
+        <input type="number" id="distance" placeholder="Avstånd i meter">
+		<button type="button" onclick="filtrate()">Filtrera</button>
+    </span>
+</div>
+		
 	</header>
 	<div id="mapDiv"></div>
 </body>

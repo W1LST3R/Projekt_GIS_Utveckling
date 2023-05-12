@@ -124,7 +124,7 @@ function getPointData() {
 
 	var filePath;
 	for(var i = 1; i < 23; i++) {
-		filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Strecka"+ i + ".json";
+		filePath = "http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Strecka"+ i + ".json";
 		var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 		dojo.xhrGet(pointData);
 	};
@@ -132,13 +132,13 @@ function getPointData() {
 	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 	
-	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json";
+	filePath = "http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Biking_elevation161008.json";
 	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
-	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json";
+	filePath = "http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json";
 	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
-	filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json";
+	filePath = "http://www.student.hig.se/~22jono3/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json";
 	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 

@@ -89,7 +89,7 @@ function getPointData() {
 	//!!!OBS!!! SIMON ÄNDRADE ALLA DOJO.XHRGET TILL SYNC:"TRUE", DETTA FÖR ATT I VISSA FALL SÅ KOPPLADES INTE RÄTT DATA TILL RÄTT OBJEKT OSV.. FINNS KANSKE ANNAN LÖSNING
 
 	var filePath;
-	for(i = 1; i < 23; i++) {
+	for(var i = 1; i < 23; i++) {
 		filePath = "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/Biking_walking_no_elevation/Strecka"+ i + ".json";
 		var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 		dojo.xhrGet(pointData);

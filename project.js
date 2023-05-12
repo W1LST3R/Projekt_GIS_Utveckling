@@ -1,6 +1,24 @@
+		/*serverData.collection("POIs").get().then((pdata) => {
+		pdata.forEach((doc) => {
+			console.log(`${doc.id} => ${doc.data()}`);
+		});
+	});*/
+
+
+	/*var dataPoi = serverData.collection("POIs").get().then((pdata) => {
+		pdata.forEach((doc) => {
+			console.log(`${doc.id} => ${doc.data()}`);
+		});
+	});
+	pointData = {dataPoi, handleAs:"json", sync:"true", content:{}, load:makePOIs};
+	dojo.xhrGet(pointData);*/
+
 /*******************************************************
 Globala Variabler
 *******************************************************/
+
+import serverData from "./firebase.js"
+import pdata from "./firebase.js"
 var map;
 var count = 0;
 var nameArr = new Array();
@@ -19,7 +37,7 @@ require(["esri/map", "esri/layers/GraphicsLayer", "esri/InfoTemplate",
 "esri/Color", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", 
 "esri/geometry/Polyline", "esri/symbols/SimpleFillSymbol","dojo/on", 
 "esri/geometry/Multipoint", "dojo/domReady!"], 
-function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, Color, SimpleSymbol, SimpleLineSymbol, Polyline, SimpleFillSymbol, On, Multipoint) {
+function(Map, On) {
 	map = new Map("mapDiv", {
 		basemap:"streets",
 		center: [17.512102147310593, 60.16792682157719],
@@ -40,6 +58,22 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			let info = document.querySelector("#poiInfo").value;
 			let namn = document.querySelector("#poiName").value;
 			let pic = document.querySelector("#poiPic").value;
+
+			serverData.collection("poiDataPerm").add({
+				latitude : currentLat,
+				Longitude : currentLon,
+				shape : shape,
+				color : color,
+				info : info,
+				name : namn,
+				pic : pic
+			})
+			.then((docRef) => {
+				console.log("Document written with ID: ", docRef.id);
+			})
+			.catch((error) => {
+				console.error("Error adding document: ", error);
+			});
 						
 			let checkPic = /^http/i;
 

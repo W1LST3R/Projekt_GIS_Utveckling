@@ -132,7 +132,7 @@ function getPointData() {
 	filePath = "http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_123547.json";
 	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
-	filePath = "http://www.student.hig.se/~22jono3/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json";
+	filePath = "http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/project/data/data/biking_walking_with_elevation/Walk_elevation_151851.json";
 	var pointData = {url:filePath, handleAs:"json", sync:"true", content:{}, load:makeLine};
 	dojo.xhrGet(pointData);
 

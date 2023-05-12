@@ -300,7 +300,7 @@ function makeLine(pointData) {
 		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
 
 		highlightSymbol.color = color;
-		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name, length.toFixed(1) + " km"));
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name + " " + pointData.etapp, length.toFixed(1) + " km"));
 		map.graphics.add(highlightGraphic);
 	});
 	//End highlight on hover

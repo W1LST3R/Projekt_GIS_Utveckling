@@ -41,6 +41,11 @@ header {
 	color:black;
 	margin:8px 0;
 }
+
+.checkbox label {
+	display:block;
+}
+
 .checkbox img {
 	height:20px;
 	width:20px;

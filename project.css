@@ -37,6 +37,15 @@ header {
 	cursor:pointer;
 }
 
+.mapButtonPressed {
+	background-color: lightgreen;
+}
+
+.mapButtonPressed:hover {
+	background-color: rgba(144,238,144,0.6);
+	cursor:pointer;
+}
+
 .checkbox {
 	color:black;
 	margin:8px 0;

@@ -106,6 +106,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	map.addLayer(pointLayer);
 	
 	getPointData();
+	populateTrailFiltration();
 });
 
 /*******************************************************
@@ -324,21 +325,84 @@ function toggleTrails(source) {
 	}
 }
 
+//Variabel för att hålla reda på om användaren har klickat på "visning av leder"
+var showTrailPopupPressed = false;
+
 //Funktion för att visa verktygslådan för att visa leder
 function showTrailPopup() {
 	var popup = document.getElementById("trailPopup");
 	popup.classList.toggle("show");
+	
+	if(!showTrailPopupPressed) showTrailPopupPressed = true;
+	else showTrailPopupPressed = false;
+	
+	if(!showTrailPopupPressed && showFilterTrailPressed) {
+		showFilterTrail();
+	}
 }
 
 //Funktion för visning av trails
 function showTrail(obj) {
-	if(!obj.checked) markers[obj.value].forEach(arrElem => arrElem.hide());
-	else markers[obj.value].forEach(arrElem => arrElem.show());
+	let checkbox = document.getElementsByName(obj.value);
+	let index = 0;
+	if(!obj.checked) {
+		markers[obj.value].forEach((arrElem)=>{
+			arrElem.hide();
+			checkbox[index++].checked = false;
+		});
+	}
+	else {
+		markers[obj.value].forEach((arrElem)=>{
+			arrElem.show();
+			checkbox[index++].checked = true;
+		});
+	}
 }
 
+//Variabel för att hålla reda på om användaren har klickat på "filtrering av enskilda leder"
+var showFilterTrailPressed = false;
+
+//Funktion för enskild visning av led
+function showFilterTrail() {
+	var popup = document.getElementById("filterTrails");
+	popup.classList.toggle("show");
+	if(!showFilterTrailPressed) showFilterTrailPressed = true;
+	else showFilterTrailPressed = false;
+}
+
+//Funktion för att fylla listan med de olika enskilda lederna
+function populateTrailFiltration() {
+	
+	for(let i = 0; i < markers.length; i++) {
+		var index = 0;
+        markers[i].forEach((graphic)=>{
+            
+            const id = graphic.id;
+
+            const label = document.createElement('label');
+            label.setAttribute("for", graphic.symbol.name);
+           
+            const checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = i;
+            checkbox.value = index++;
+            checkbox.id = graphic.symbol.name;
+			checkbox.onclick = function() {
+				if(!this.checked) markers[this.name][this.value].hide();
+				else markers[this.name][this.value].show();
+			};
+
+            label.appendChild(checkbox);
+            
+            label.appendChild(document.createTextNode(graphic.symbol.name));
+			
+            document.querySelector("#trailContent").appendChild(label);
+        });
+	}
+}
 
 //Funktion för att visa verktygslådan för att skapa egna POIs
-function showPoi(obj) {
+function showPoi() {
 	var popup = document.getElementById("poiPopup");
 	popup.classList.toggle("show");
 	
@@ -565,15 +629,13 @@ function filtrate(){
 	led = document.getElementById("led").value;
 	ledMarker = null;
 	
-	
-//console.log(markers[0][0]);
 	for(var i = 0; i < markers.length; i++){
-	for(var j = 0; j < markers[i].length; j++){
-	if (markers[i][j].symbol.name == led){
-		ledMarker = markers[i][j];
-		break;
-	}
-	}
+		for(var j = 0; j < markers[i].length; j++){
+			if (markers[i][j].symbol.name == led){
+				ledMarker = markers[i][j];
+				break;
+			}
+		}
 	if(ledMarker != null)
 		break;
 	}
@@ -583,23 +645,18 @@ function filtrate(){
 
 function generateOptions(pointData){
 
+	if (pointData==undefined){
+		pointData = "test.json";
+	}	
+	var option = document.createElement("option");
 
-if (pointData==undefined){
-	pointData = "test.json";
-}	
-var option = document.createElement("option");
+	// Sätt attributet "value"
+	option.value = pointData;
 
-// Sätt attributet "value"
-option.value = pointData;
+	// Sätt innehållet (texten) på <option>
+	option.textContent = pointData;
 
-// Sätt innehållet (texten) på <option>
-option.textContent = pointData;
-
-// Lägg till <option> i en <select>
-var select = document.getElementById("led");
-select.appendChild(option);
-
-	
+	// Lägg till <option> i en <select>
+	var select = document.getElementById("led");
+	select.appendChild(option);
 }
-
-

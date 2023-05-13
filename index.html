@@ -18,59 +18,82 @@
 	<header>
 	<div class="container">
 		<div class="popup">
-		<button type="button" class="mapButton" onclick="showTrailPopup()">Visa/Göm leder</button>
+		<button type="button" class="mapButton" onclick="showTrailPopup()">Leder</button>
 		<span class="popuptext" id="trailPopup">
 			<div class="checkbox">
-				<input type="checkbox" onclick="toggleTrails(this)">
-				<label for="hideShowAll">Visa/Göm alla</label>
+				<label for="hideShowAll">
+					<input type="checkbox" onclick="toggleTrails(this)">
+					Visa/Göm alla
+				</label>
 				<br />
-				<br />
-				<input type="checkbox" value="0" id="0" onclick="showTrail(this)" name="trailCheck">
-				<label for="0">Cykling och vandring</label>
-				<br />
-				<input type="checkbox" value="1" id="1" onclick="showTrail(this)" name="trailCheck">
-				<label for="1">Vandring</label>
-				<br />
-				<input type="checkbox" value="2" id="2" onclick="showTrail(this)" name="trailCheck">
-				<label for="2">Cykling</label>
+				<label for="bikingWalking">
+					<input type="checkbox" value="0" id="bikingWalking" onclick="showTrail(this)" name="trailCheck">
+					Cykling och vandring
+				</label>
+				<label for="walking">
+					<input type="checkbox" value="1" id="walking" onclick="showTrail(this)" name="trailCheck">
+					Vandring
+				</label>
+				<label for="biking">
+					<input type="checkbox" value="2" id="biking" onclick="showTrail(this)" name="trailCheck">
+					Cykling
+				</label>
+			</div>
+			<div class="popup">
+			<button type="button" class="mapButton" onclick="showFilterTrail()">Filtrera enskilda leder</button>
+			<span class="popuptext" id="filterTrails">
+			<div class="checkbox" id="trailContent">
+			</div>
+			</span>
 			</div>
 		</span>
 		</div>
 		<div class="popup">
-		<button type="button" class="mapButton" onclick="showPoi(this)">Sevärdigheter</button>
+		<button type="button" class="mapButton" onclick="showPoi()">Sevärdigheter</button>
 		<span class="popuptext" id="poiPopup">
 			<div class="checkbox">
 				<p>Filtrera sevärdigheter</p>
-				<input type="checkbox" checked="true" onclick="togglePois(this)">
-				<label for="hideOrShow">Göm/Visa alla</label>
+				<label for="hideOrShow">
+					<input type="checkbox" checked="true" onclick="togglePois(this)">
+					Göm/Visa alla
+				</label>
 				<br />
-				<br />
-				<input type="checkbox" value="0" checked="true" onclick="hideShow(this)" id="toilet" name="poiCheck">
-				<label for="toilet">Toaletter <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg"></label>
-				<br />
-				<input type="checkbox" value="1" checked="true" onclick="hideShow(this)" id="fireplace" name="poiCheck">
-				<label for="fireplace">Eldplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg"></label>
-				<br />
-				<input type="checkbox" value="2" checked="true" onclick="hideShow(this)" id="food" name="poiCheck">
-				<label for="food">Matplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Food.jpg"></label>
-				<br />
-				<input type="checkbox" value="3" checked="true" onclick="hideShow(this)" id="information" name="poiCheck">
-				<label for="information">Information <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Info.png"></label>
-				<br />
-				<input type="checkbox" value="4" checked="true" onclick="hideShow(this)" id="restArea" name="poiCheck">
-				<label for="restArea">Rastplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Bench.png"></label>
-				<br />
-				<input type="checkbox" value="5" checked="true" onclick="hideShow(this)" id="parking" name="poiCheck">
-				<label for="parking">Parkering <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Parking.jpg"></label>
-				<br />
-				<input type="checkbox" value="6" checked="true" onclick="hideShow(this)" id="waterPost" name="poiCheck">
-				<label for="waterPost">Vatten <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Water.jpg"></label>
-				<br />
-				<input type="checkbox" value="7" checked="true" onclick="hideShow(this)" id="windShelter" name="poiCheck">
-				<label for="windShelter">Vindskydd <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WindShelter.jpg"></label>
-				<br />
-				<input type="checkbox" value="8" checked="true" onclick="hideShow(this)" id="cabin" name="poiCheck">
-				<label for="cabin">Stuga <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Cabin.png"></label>
+				<label for="toilet">
+					<input type="checkbox" value="0" checked="true" onclick="hideShow(this)" id="toilet" name="poiCheck">
+					Toaletter <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg">
+				</label>
+				<label for="fireplace">
+					<input type="checkbox" value="1" checked="true" onclick="hideShow(this)" id="fireplace" name="poiCheck">
+					Eldplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg">
+				</label>
+				<label for="food">
+					<input type="checkbox" value="2" checked="true" onclick="hideShow(this)" id="food" name="poiCheck">
+					Matplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Food.jpg">
+				</label>
+				<label for="information">
+					<input type="checkbox" value="3" checked="true" onclick="hideShow(this)" id="information" name="poiCheck">
+					Information <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Info.png">
+				</label>
+				<label for="restArea">
+					<input type="checkbox" value="4" checked="true" onclick="hideShow(this)" id="restArea" name="poiCheck">
+					Rastplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Bench.png">
+				</label>
+				<label for="parking">
+					<input type="checkbox" value="5" checked="true" onclick="hideShow(this)" id="parking" name="poiCheck">
+					Parkering <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Parking.jpg">
+				</label>
+				<label for="waterPost">
+					<input type="checkbox" value="6" checked="true" onclick="hideShow(this)" id="waterPost" name="poiCheck">
+					Vatten <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Water.jpg">
+				</label>
+				<label for="windShelter">
+					<input type="checkbox" value="7" checked="true" onclick="hideShow(this)" id="windShelter" name="poiCheck">
+					Vindskydd <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WindShelter.jpg">
+				</label>
+				<label for="cabin">
+					<input type="checkbox" value="8" checked="true" onclick="hideShow(this)" id="cabin" name="poiCheck">
+					Stuga <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Cabin.png">
+				</label>
 			</div>
 		</span>
 		</div>

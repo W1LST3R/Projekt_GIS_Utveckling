@@ -107,6 +107,30 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	
 	getPointData();
 	populateTrailFiltration();
+	
+	//Highlight on hover
+	map.on("load", function(){
+        map.graphics.enableMouseEvents();
+        map.graphics.on("mouse-out", removeHighlight);
+    });
+	
+	pointLayer.on("mouse-over", function(evt){
+		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
+		highlightSymbol.style = "solid";
+		highlightSymbol.width = 5.5;
+		highlightSymbol.join = "round";
+		
+		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
+
+		highlightSymbol.color = color;
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name, "Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång"));
+		map.graphics.add(highlightGraphic);
+		
+		map.infoWindow.setTitle(evt.graphic.symbol.name);
+        map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång");
+		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
+	});
+	//End highlight on hover
 });
 
 /*******************************************************
@@ -250,30 +274,6 @@ function makeLine(pointData) {
 		symbol.style = "solid";
 	}
 	
-	//Highlight on hover
-	map.on("load", function(){
-        map.graphics.enableMouseEvents();
-        map.graphics.on("mouse-out", removeHighlight);
-    });
-	
-	pointLayer.on("mouse-over", function(evt){
-		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
-		highlightSymbol.style = "solid";
-		highlightSymbol.width = 5.5;
-		highlightSymbol.join = "round";
-		
-		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
-
-		highlightSymbol.color = color;
-		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name, "Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång"));
-		map.graphics.add(highlightGraphic);
-		
-		map.infoWindow.setTitle(evt.graphic.symbol.name);
-        map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång");
-		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
-	});
-	//End highlight on hover
-	
 	//Skapa det grafiska objektet med polyline och symbolen
 	var graphic = new esri.Graphic(poly, symbol);
 	graphic.id = count++;
@@ -373,11 +373,17 @@ function showFilterTrail() {
 //Funktion för att fylla listan med de olika enskilda lederna
 function populateTrailFiltration() {
 	
+	//Tar bort innehåll så att nya leder som skapas även läggs till korrekt
+	let element = document.getElementById("trailContent");
+	while (element.firstChild) {
+		element.removeChild(element.firstChild);
+	}
+	
 	for(let i = 0; i < markers.length; i++) {
 		var index = 0;
         markers[i].forEach((graphic)=>{
             
-            const id = graphic.id;
+            //const id = graphic.id; 
 
             const label = document.createElement('label');
             label.setAttribute("for", graphic.symbol.name);
@@ -391,7 +397,9 @@ function populateTrailFiltration() {
 				if(!this.checked) markers[this.name][this.value].hide();
 				else markers[this.name][this.value].show();
 			};
-
+			
+			if(graphic.visible) checkbox.checked = true;
+			
             label.appendChild(checkbox);
             
             label.appendChild(document.createTextNode(graphic.symbol.name));
@@ -450,11 +458,11 @@ function makePoi(obj) {
 	
 	if(!poiBtnPressed) {
 		poiBtnPressed = true;
-		obj.style.backgroundColor = "lightgreen";
+		obj.setAttribute("class", "mapButtonPressed");
 	}
 	else {
 		poiBtnPressed = false;
-		obj.style.backgroundColor = "#e7e7e7";
+		obj.setAttribute("class", "mapButton");
 		namn.value = "Namn för din markör...";
 		info.value = "Info för din markör..."
 		shape.value = "Välj en symbol";
@@ -517,10 +525,88 @@ function makeTrail() {
 	
 	if(!makeTrailPressed) {
 		makeTrailPressed = true;
-		obj.style.backgroundColor = "lightgreen";
+		obj.setAttribute("class", "mapButtonPressed");
 	} else {
 		makeTrailPressed = false;
-		obj.style.backgroundColor = "#e7e7e7";
+		obj.setAttribute("class", "mapButton");
+	}
+}
+
+var makeCategoryPressed = false;
+var categoryValue = 3;
+var userCategories = new Array();
+
+function makeCategory(obj) {
+	
+	if(!makeCategoryPressed) {
+		makeCategoryPressed = true;
+		obj.setAttribute("class", "mapButtonPressed");
+	}
+	else {
+		makeCategoryPressed = false;
+		obj.setAttribute("class", "mapButton");
+	}
+	
+	const categorySettings = document.getElementById("myCategoryMenu");
+	const trailMenu = document.getElementById("trailMenu");
+	
+	if(categorySettings.style.display === "none") {
+		categorySettings.style.display = "block";
+		trailMenu.style.display = "none";
+	}
+	else {
+		categorySettings.style.display = "none";
+		trailMenu.style.display = "block";
+	}
+	
+	const name = document.getElementById("categoryName").value;
+	const color = document.getElementById("categoryColor").value;
+	const style = document.getElementById("categoryStyle").value;
+	const width = document.getElementById("categoryWidth").value;
+	
+	if(name != "Namn på kategori..." && name != "") {
+		
+		let userStyle = {color:color, style:style, width:width};
+		userCategories.push(userStyle);
+		
+		var option = document.createElement("option");
+
+		// Sätt attributet "value"
+		option.value = categoryValue;
+
+		// Sätt innehållet (texten) på <option>
+		option.textContent = name;
+		
+		let myArr = new Array();
+		markers.push(myArr);
+
+		// Lägg till <option> i en <select>
+		var select = document.getElementById("trails");
+		select.appendChild(option);
+		
+		//Skapa checkbox för leden
+		const label = document.createElement('label');
+		label.setAttribute("for", name);
+           
+		const checkbox = document.createElement('input');
+		checkbox.type = "checkbox";
+		checkbox.name = "trailCheck";
+		checkbox.value = categoryValue++;
+		checkbox.id = name;
+		//checkbox.checked = true;
+		checkbox.onclick = function() {
+			showTrail(this);
+		};
+			
+		label.appendChild(checkbox);
+            
+		label.appendChild(document.createTextNode(name));
+			
+		document.querySelector("#myCategories").appendChild(label);
+	} else {
+		if(!makeCategoryPressed) {
+			alert("Du måste ange ett namn på din kategori för att den ska sparas.");
+		}
 	}
 }
 
@@ -529,10 +615,17 @@ function makeThisTrail() {
 	
 	let typeOfTrail = document.querySelector("#trails");
 	let index = Number(typeOfTrail.value);
-	let color = markers[index][0].symbol.color;
-	let style = markers[index][0].symbol.style;
-	let width = markers[index][0].symbol.width;
 	let name = document.querySelector("#trailName").value;
+	let color, style, width;
+	if(index <= 2) {
+		color = markers[index][0].symbol.color;
+		style = markers[index][0].symbol.style;
+		width = markers[index][0].symbol.width;
+	} else {
+		color = userCategories[index-3].color;
+		style = userCategories[index-3].style;
+		width = userCategories[index-3].width;
+	}
 	
 	if(name == "" || name == "Namn för din led...") name = "Min led";
 	
@@ -573,6 +666,7 @@ function makeThisTrail() {
 	myTrailArr = [];
 	myTrailPath = [];
 	makeTrail();
+	populateTrailFiltration();
 }
 
 
@@ -611,10 +705,10 @@ function filterPoi(obj) {
 
     if (!filterButton) {
         filterButton = true;
-        obj.style.backgroundColor = "lightgreen";
+        obj.setAttribute("class", "mapButtonPressed");
     } else {
         filterButton = false;
-        obj.style.backgroundColor = "#e7e7e7";
+        obj.setAttribute("class", "mapButton");
         led.value = "Välj en led";
         distance.value = "";
     }

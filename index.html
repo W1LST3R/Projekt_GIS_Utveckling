@@ -17,27 +17,19 @@
 <body class="claro">
 	<header>
 	<div class="container">
+	
+		<!-- Show Trails -->
 		<div class="popup">
 		<button type="button" class="mapButton" onclick="showTrailPopup()">Leder</button>
 		<span class="popuptext" id="trailPopup">
 			<div class="checkbox">
-				<label for="hideShowAll">
-					<input type="checkbox" onclick="toggleTrails(this)">
-					Visa/Göm alla
-				</label>
+				<label for="hideShowAll"><input type="checkbox" onclick="toggleTrails(this)">Visa/Göm alla</label>
 				<br />
-				<label for="bikingWalking">
-					<input type="checkbox" value="0" id="bikingWalking" onclick="showTrail(this)" name="trailCheck">
-					Cykling och vandring
-				</label>
-				<label for="walking">
-					<input type="checkbox" value="1" id="walking" onclick="showTrail(this)" name="trailCheck">
-					Vandring
-				</label>
-				<label for="biking">
-					<input type="checkbox" value="2" id="biking" onclick="showTrail(this)" name="trailCheck">
-					Cykling
-				</label>
+				<label for="bikingWalking"><input type="checkbox" value="0" id="bikingWalking" onclick="showTrail(this)" name="trailCheck">Cykling och vandring</label>
+				<label for="walking"><input type="checkbox" value="1" id="walking" onclick="showTrail(this)" name="trailCheck">Vandring</label>
+				<label for="biking"><input type="checkbox" value="2" id="biking" onclick="showTrail(this)" name="trailCheck">Cykling</label>
+				<span id="myCategories">
+				</span>
 			</div>
 			<div class="popup">
 			<button type="button" class="mapButton" onclick="showFilterTrail()">Filtrera enskilda leder</button>
@@ -48,6 +40,8 @@
 			</div>
 		</span>
 		</div>
+		
+		<!-- Show POI -->
 		<div class="popup">
 		<button type="button" class="mapButton" onclick="showPoi()">Sevärdigheter</button>
 		<span class="popuptext" id="poiPopup">
@@ -133,33 +127,64 @@
 			<button type="button" class="mapButton" style="background-color:#f04f4f" onclick="removeMyPoi()">Ta bort senaste markör</button>
 		</span>
 		</div>
-		<div class="popup">
 		
 		<!-- Make trail -->
-		
+		<div class="popup">
 		<button type="button" class="mapButton" onclick="makeTrail()" id="trailButton">Skapa en egen led</button>
 		<span class="popuptext" id="myTrail">
 			<p style="color:black">(1) Gör inställningar för din led<br>(2) Klicka sedan på kartan för att sätta ut punkter<br>(3) Klicka på "Skapa led" för att generera leden</p>
+			<button type="button" onclick="makeCategory(this)">Skapa en ny kategori</button>
+			<div id="myCategoryMenu" style="display:none">
+				<p style="color:black">(1) Bestäm inställningar för din kategori.<br />(2) Stäng denna meny för att spara kategorin.<br/ >(3) Välj din nya kategori i listan.</p>
+				<input type="text" id="categoryName" value="Namn på kategori..." onfocus="this.value=''">
+				<select name="categoryColor" id="categoryColor">
+					<option selected disabled value="rgba(255,255,255,0.8)">Välj färg</option>
+					<option value="rgba(255,0,0,0.8)">Röd</option>
+					<option value="rgba(0,255,0,0.8)">Grön</option>
+					<option value="rgba(0,0,255,0.8)">Blå</option>
+				</select>
+				<select name="categoryStyle" id="categoryStyle">
+					<option selected disabled value="solid">Välj stil</option>
+					<option value="solid">Solid</option>
+					<option value="dash">Streckad</option>
+					<option value="dot">Punkter</option>
+				</select>
+				<select name="categoryWidth" id="categoryWidth">
+					<option selected disabled value="7">Välj storlek</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+				</select>
+			</div>
+			<div id="trailMenu">
 			<select name="typeOfTrail" id="trails">
-				<option selected disabled value="0">Välj typ av led</option>
-				<option value="0">Cykel och Vandrings leder</option>
-				<option value="1">Vandrings leder</option>
-				<option value="2">Cykel leder</option>
+				<option selected disabled value="0">Välj kategori</option>
+				<option value="0">Cykel och Vandring</option>
+				<option value="1">Vandring</option>
+				<option value="2">Cykel</option>
 			</select>
 			<input type="text" id="trailName" value="Namn för din led..." onfocus="this.value=''"> 
 			<button type="button" onclick="makeThisTrail()">Skapa led</button>
+			</div>
 		</span>
 		</div>
-				<div class="popup">
-    <button type="button" class="mapButton" onclick="filterPoi(this)">Filtrering av POIs baserat på geografiskt avstånd.</button>
-    <span class="popuptext" id="myFilter">
-        <select name="led" id="led">
-            <option selected disabled>Välj en led</option>
-        </select>
-        <input type="number" id="distance" placeholder="Avstånd i meter">
-		<button type="button" onclick="filtrate()">Filtrera</button>
-    </span>
-</div>
+		
+		<!-- Filter based on distance -->
+		<div class="popup">
+		<button type="button" class="mapButton" onclick="filterPoi(this)">Filtrering av POIs baserat på geografiskt avstånd.</button>
+			<span class="popuptext" id="myFilter">
+				<select name="led" id="led">
+					<option selected disabled>Välj en led</option>
+				</select>
+				<input type="number" id="distance" placeholder="Avstånd i meter">
+				<button type="button" onclick="filtrate()">Filtrera</button>
+		</span>
+		</div>
 		
 	</div>
 		

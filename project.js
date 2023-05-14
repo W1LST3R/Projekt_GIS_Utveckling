@@ -51,7 +51,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			if(checkPic.test(pic)) pic = "<img src="+pic+">";
 			else pic = "";
 
-			if(namn == "Namn för din markör..." || namn == "") namn = "En markör";
+			if(namn == "Namn på din markör..." || namn == "") namn = "En markör";
 				
 			if(info == "Info för din markör...") info = "";
 			

@@ -1,8 +1,8 @@
 
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getFirestore, getDocs, addDoc, collection, doc} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import {getPermData} from "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,9 +17,26 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getFirestore(app);
-const serverData = collection(database, 'poiDataPerm');
-const pdata = await getDocs(serverData);
+initializeApp(firebaseConfig);
+const db = getFirestore();
+const colRef = collection(db,"poiDataPerm")
+const dataToAdd = getPermData();
+console.log(dataToAdd);
+//const permPoiDataGet = await 
+var pois = [];
+  getDocs(colRef)
+  .then((snapshot)=>{
+    snapshot.docs.forEach((doc) => {
+      pois.push({...doc.data()})
+    })
+  })
+  .catch(err =>{
+      console.log(err.message)
+  });
 
-export default serverData + pdata;
+addDoc(collection(db,"poiDataPerm"),{
+  dataToAdd
+});
+
+ 
+export default pois;

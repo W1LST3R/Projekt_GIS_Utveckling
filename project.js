@@ -120,14 +120,22 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		highlightSymbol.width = 5.5;
 		highlightSymbol.join = "round";
 		
+		let info
+		let name = evt.graphic.symbol.name;
+		
+		if(evt.graphic.symbol.info == undefined || evt.graphic.symbol.info == "Info för din led...") info = "";
+		else info = "<br /><br />" + evt.graphic.symbol.info;
+		
+		if(name == undefined || name == "") name = "En led";
+		
 		let color = evt.graphic.symbol.color.substring(0, evt.graphic.symbol.color.lastIndexOf(",")) + ", 0.5)";
 
 		highlightSymbol.color = color;
-		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(evt.graphic.symbol.name, "Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång"));
+		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol).setInfoTemplate(new esri.InfoTemplate(name, "Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång" + info));
 		map.graphics.add(highlightGraphic);
 		
-		map.infoWindow.setTitle(evt.graphic.symbol.name);
-        map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång");
+		map.infoWindow.setTitle(name);
+        map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång" + info);
 		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
 	});
 	//End highlight on hover
@@ -463,7 +471,7 @@ function makePoi(obj) {
 	else {
 		poiBtnPressed = false;
 		obj.setAttribute("class", "mapButton");
-		namn.value = "Namn för din markör...";
+		namn.value = "Namn på din markör...";
 		info.value = "Info för din markör..."
 		shape.value = "Välj en symbol";
 		color.value = "Välj en färg";
@@ -523,12 +531,19 @@ function makeTrail() {
 	
 	let obj = document.getElementById("trailButton");
 	
+	let setOption = document.getElementById("trails");
+	let setName = document.getElementById("trailName");
+	let setInfo = document.getElementById("trailInfo");
+	
 	if(!makeTrailPressed) {
 		makeTrailPressed = true;
 		obj.setAttribute("class", "mapButtonPressed");
 	} else {
 		makeTrailPressed = false;
 		obj.setAttribute("class", "mapButton");
+		setOption.value = "0";
+		setName.value = "Namn på din led...";
+		setInfo.value = "Info för din led...";
 	}
 }
 
@@ -564,23 +579,22 @@ function makeCategory(obj) {
 	const style = document.getElementById("categoryStyle").value;
 	const width = document.getElementById("categoryWidth").value;
 	
-	if(name != "Namn på kategori..." && name != "") {
+	if(name != "Namn på kategori..." && name != "" && !makeCategoryPressed) {
 		
+		//Skapa ett objekt med användarens inställningar och lägg till den i den globala arrayen userCategories
 		let userStyle = {color:color, style:style, width:width};
 		userCategories.push(userStyle);
 		
+		//Skapa en <option> där man väljer kategori
 		var option = document.createElement("option");
-
-		// Sätt attributet "value"
 		option.value = categoryValue;
-
-		// Sätt innehållet (texten) på <option>
 		option.textContent = name;
 		
+		//Skapa en array för kategorin och lägg till den i den globala arrayen markers
 		let myArr = new Array();
 		markers.push(myArr);
 
-		// Lägg till <option> i en <select>
+		//Lägg till våran <option> i <select> för kategorier
 		var select = document.getElementById("trails");
 		select.appendChild(option);
 		
@@ -593,7 +607,7 @@ function makeCategory(obj) {
 		checkbox.name = "trailCheck";
 		checkbox.value = categoryValue++;
 		checkbox.id = name;
-		//checkbox.checked = true;
+		
 		checkbox.onclick = function() {
 			showTrail(this);
 		};
@@ -603,6 +617,16 @@ function makeCategory(obj) {
 		label.appendChild(document.createTextNode(name));
 			
 		document.querySelector("#myCategories").appendChild(label);
+		
+		let setName = document.getElementById("categoryName");
+		let setColor = document.getElementById("categoryColor");
+		let setStyle = document.getElementById("categoryStyle");
+		let setWidth = document.getElementById("categoryWidth");
+		setName.value = "Namn på kategori...";
+		setColor.value = "rgba(255,255,255,0.8)";
+		setStyle.value = "solid";
+		setWidth.value = "7";
+		
 	} else {
 		if(!makeCategoryPressed) {
 			alert("Du måste ange ett namn på din kategori för att den ska sparas.");
@@ -616,6 +640,7 @@ function makeThisTrail() {
 	let typeOfTrail = document.querySelector("#trails");
 	let index = Number(typeOfTrail.value);
 	let name = document.querySelector("#trailName").value;
+	let info = document.querySelector("#trailInfo").value;
 	let color, style, width;
 	if(index <= 2) {
 		color = markers[index][0].symbol.color;
@@ -627,7 +652,7 @@ function makeThisTrail() {
 		width = userCategories[index-3].width;
 	}
 	
-	if(name == "" || name == "Namn för din led...") name = "Min led";
+	if(name == "" || name == "Namn på din led...") name = "Min led";
 	
 	var poly = new esri.geometry.Polyline();
 	poly.addPath(myTrailPath);
@@ -637,6 +662,7 @@ function makeThisTrail() {
 	symbol.color = color;
 	symbol.style = style;
 	symbol.name = name;
+	symbol.info = info;
 	
 	var length = 0;
 	var flag = false;
@@ -699,7 +725,6 @@ function filterPoi(obj) {
     var led = document.querySelector("#led");
     var distance = document.querySelector("#distance");
 	
-
     var popup = document.getElementById("myFilter");
     popup.classList.toggle("show");
 

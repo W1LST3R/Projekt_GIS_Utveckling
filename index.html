@@ -97,7 +97,7 @@
 		<button type="button" class="mapButton" onclick="makePoi(this)">Skapa en egen markör</button>
 		<span class="popuptext" id="myPopup">
 			<p style="color:black">Bestäm inställning för din markör och klicka sedan på kartan för att placera ut den.</p>
-			<input type="text" id="poiName" value="Namn för din markör..." onfocus="this.value=''">
+			<input type="text" id="poiName" value="Namn på din markör..." onfocus="this.value=''">
 			<textarea type="text" id="poiInfo" placeholder="Info för din markör..." onfocus="this.value=''"></textarea>
 			<select name="shapes" id="shape">
 				<option selected disabled>Välj en symbol</option>
@@ -162,13 +162,15 @@
 				</select>
 			</div>
 			<div id="trailMenu">
+			<br />
 			<select name="typeOfTrail" id="trails">
 				<option selected disabled value="0">Välj kategori</option>
 				<option value="0">Cykel och Vandring</option>
 				<option value="1">Vandring</option>
 				<option value="2">Cykel</option>
 			</select>
-			<input type="text" id="trailName" value="Namn för din led..." onfocus="this.value=''"> 
+			<input type="text" id="trailName" value="Namn på din led..." onfocus="this.value=''">
+			<input type="text" id="trailInfo" value="Info för din led..." onfocus="this.value=''"> 
 			<button type="button" onclick="makeThisTrail()">Skapa led</button>
 			</div>
 		</span>

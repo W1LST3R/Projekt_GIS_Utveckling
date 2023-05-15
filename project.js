@@ -23,8 +23,8 @@ require(["esri/map", "esri/layers/GraphicsLayer", "esri/InfoTemplate",
 "esri/geometry/Point", "esri/symbols/PictureMarkerSymbol", "esri/graphic", 
 "esri/Color", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", 
 "esri/geometry/Polyline", "esri/symbols/SimpleFillSymbol","dojo/on", 
-"esri/geometry/Multipoint", "dojo/domReady!"], 
-function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, Color, SimpleSymbol, SimpleLineSymbol, Polyline, SimpleFillSymbol, On, Multipoint) {
+"esri/geometry/Multipoint", "esri/layers/FeatureLayer", "dojo/domReady!"], 
+function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, Color, SimpleSymbol, SimpleLineSymbol, Polyline, SimpleFillSymbol, On, Multipoint, FeatureLayer) {
 	map = new Map("mapDiv", {
 		basemap:"streets",
 		center: [17.512102147310593, 60.16792682157719],
@@ -105,14 +105,18 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	pointLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(pointLayer);
 	
+	poiLayer = new esri.layers.GraphicsLayer();
+	map.addLayer(poiLayer);
+	
 	getPointData();
 	populateTrailFiltration();
+	enableMouseOut();
 	
 	//Highlight on hover
-	map.on("load", function(){
-        map.graphics.enableMouseEvents();
+	function enableMouseOut() {
+		map.graphics.enableMouseEvents();
         map.graphics.on("mouse-out", removeHighlight);
-    });
+	}
 	
 	pointLayer.on("mouse-over", function(evt){
 		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
@@ -139,7 +143,21 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
 	});
 	//End highlight on hover
+	/*
+	poiLayer.on("mouse-over", function(evt){
+		map.infoWindow.setTitle(evt.graphic.symbol.name);
+        map.infoWindow.setContent(evt.graphic.symbol.info+'<img src='+evt.graphic.symbol.pic+'>');
+		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
+	});
+	*/
 });
+
+//Funktion för att ta bort highlight av led
+function removeHighlight() {
+	console.log("remove");
+    map.graphics.clear();
+	map.infoWindow.hide();
+}
 
 /*******************************************************
 Funktioner för hämtning  och bearbetning av JSON data
@@ -197,7 +215,7 @@ function getPointData() {
 	pointData = {url:"http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/poiCabin/poiCabin.json", handleAs:"json", sync:"true", content:{}, load:makePOIs};
 	dojo.xhrGet(pointData);
 }
-
+/*
 //För punkter
 function makePoint(pointData) {
 	poiLayer = new esri.layers.GraphicsLayer();
@@ -222,7 +240,7 @@ function makePoint(pointData) {
 		testCount++;
 	});
 }
-
+*/
 //För linjer/leder
 function makeLine(pointData) {
 		
@@ -301,12 +319,6 @@ function makeLine(pointData) {
 		bikingMarkers[bikingMarkers.length-1].hide();
 		pointLayer.add(bikingMarkers[bikingMarkers.length-1]);
 	}
-}
-
-//Funktion för att ta bort highlight av led
-function removeHighlight() {
-    map.graphics.clear();
-	map.infoWindow.hide();
 }
 	
 //Funktion för att generera ett slumpmässigt rgba värde
@@ -424,22 +436,6 @@ function showPoi() {
 	
 }
 
-//Funktion för att visa/gömma utsatta POIs på kartan (gäller inte användarsskapade pois)
-function hideShow(obj) {
-	if(!obj.checked) allPOIs[obj.value].hide();
-	else allPOIs[obj.value].show();
-}
-
-//Funktion för att visa/gömma ALLA utsatta POIs (gäller inte användarsskapade pois)
-function togglePois(source) {
-	
-	checkboxes = document.getElementsByName("poiCheck");
-	
-	for(let i = 0; i < checkboxes.length; i++) {
-		checkboxes[i].checked = source.checked;
-		hideShow(checkboxes[i])
-	}
-}
 /*******************************************************
 Funktioner för POI
 *******************************************************/
@@ -478,16 +474,18 @@ function makePoi(obj) {
 		pic.value = "Länk för bild...";
 	}
 	
-	poiLayer = new esri.layers.GraphicsLayer();
-	map.addLayer(poiLayer);
+	//poiLayer = new esri.layers.GraphicsLayer();
+	//map.addLayer(poiLayer);
 }
 
-var allPOIs = new Array(); //Global array för POIs
+var allPOIs = new Array(); //Global array för förbestämda POIs
 var poiCount = 0;
 
 function makePOIs(pointData){
-	poiLayer = new esri.layers.GraphicsLayer();
-	map.addLayer(poiLayer);
+	//poiLayer = new esri.layers.GraphicsLayer();
+	//map.addLayer(poiLayer);
+	let arr = new Array();
+	var index = 0;
 
 	//ForEach loop genom JSON data 
 	dojo.forEach(pointData.poi, function(poi) {
@@ -511,10 +509,30 @@ function makePOIs(pointData){
 		Symbol.logo = logo;
 		var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
 		graphic.id = poiCount++;
-		poiLayer.add(graphic);
+		graphic.index = index++;
+		
+		arr.push(graphic);
+		poiLayer.add(arr[arr.length-1]);
 	});
 	
-	allPOIs.push(poiLayer);
+	allPOIs.push(arr);
+}
+
+//Funktion för att visa/gömma utsatta POIs på kartan (gäller inte användarsskapade pois)
+function hideShow(obj) {
+	if(!obj.checked) allPOIs[obj.value].forEach(poi => poi.hide());
+	else allPOIs[obj.value].forEach(poi => poi.show());
+}
+
+//Funktion för att visa/gömma ALLA utsatta POIs (gäller inte användarsskapade pois)
+function togglePois(source) {
+	
+	checkboxes = document.getElementsByName("poiCheck");
+	
+	for(let i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = source.checked;
+		hideShow(checkboxes[i])
+	}
 }
 
 /***********************************************
@@ -684,7 +702,7 @@ function makeThisTrail() {
 	let graphic = new esri.Graphic(poly, symbol);
 	
 	markers[index].push(graphic);
-	pointLayer.add(graphic);
+	pointLayer.add(markers[index][markers[index].length-1]);
 
 	for(let i = 0; i < myTrailArr.length; i++) {
 		myTrailArr[i].hide();
@@ -760,6 +778,11 @@ function filtrate(){
 	}
 	
 	console.log(ledMarker);
+	let q = new esri.tasks.Query();
+	q.spatialRelationship = esri.tasks.Query.SPATIAL_REL_CONTAINS;
+	console.log(q);
+	//let ft = new esri.layers.FeatureLayer();
+	//console.log(ft);
 }
 
 function generateOptions(pointData){

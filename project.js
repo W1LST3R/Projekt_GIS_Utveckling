@@ -18,18 +18,27 @@ markers = [walkingAndBikingMarkers, walkingMarkers, bikingMarkers];
 var myTrailPath = new Array();
 var myTrailArr = new Array();
 var filterButton = false;
+var geometryEngine;
+var gsvc;
+dojo.require("esri.map");
+dojo.require("esri.tasks.geometry");
 
 require(["esri/map", "esri/layers/GraphicsLayer", "esri/InfoTemplate", 
 "esri/geometry/Point", "esri/symbols/PictureMarkerSymbol", "esri/graphic", 
 "esri/Color", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", 
 "esri/geometry/Polyline", "esri/symbols/SimpleFillSymbol","dojo/on", 
-"esri/geometry/Multipoint", "esri/layers/FeatureLayer", "dojo/domReady!"], 
-function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, Color, SimpleSymbol, SimpleLineSymbol, Polyline, SimpleFillSymbol, On, Multipoint, FeatureLayer) {
+"esri/geometry/Multipoint", "esri/layers/FeatureLayer", "esri/geometry/geometryEngine", 
+"esri/geometry/Circle", "esri/geometry/Extent",
+"dojo/domReady!"], 
+function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, Color, SimpleSymbol, SimpleLineSymbol, Polyline, SimpleFillSymbol, On, Multipoint, FeatureLayer, geometryEngine, Circle, Extent) {
 	map = new Map("mapDiv", {
 		basemap:"streets",
 		center: [17.512102147310593, 60.16792682157719],
 		zoom:8
 	});
+	
+	gsvc = new esri.tasks.GeometryService("https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+	
 	// För att hitta koordinater på kartan.
 	On(map, "click", function(evt) {
 		var mapPoint = esri.geometry.webMercatorToGeographic(evt.mapPoint);
@@ -101,6 +110,9 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			myTrailArr.push(myTrailLayer);
 		}
 	});
+	
+	//geometryEngine = new geometryEngine();
+	//console.log(geometryEngine);
 	
 	pointLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(pointLayer);
@@ -337,7 +349,7 @@ Funktioner för knappar och hantering av knapptryck
 
 function toggleTrails(source) {
 	
-	checkboxes = document.getElementsByName("trailCheck");
+	var checkboxes = document.getElementsByName("trailCheck");
 	
 	for(let i = 0; i < checkboxes.length; i++) {
 		checkboxes[i].checked = source.checked;
@@ -507,6 +519,7 @@ function makePOIs(pointData){
 		Symbol.info = info;
 		Symbol.pic = pic;
 		Symbol.logo = logo;
+		
 		var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+'<img src='+pic+'>'));
 		graphic.id = poiCount++;
 		graphic.index = index++;
@@ -713,8 +726,6 @@ function makeThisTrail() {
 	populateTrailFiltration();
 }
 
-
-
 //Funktionen kalkyerar längden mellan två punkter i WGS84 med hjälp av Haversine formulan
 function calculateDistance(lat1, lon1, lat2, lon2) { 
 	const earthRadius = 6371; //Jordens radie i km
@@ -760,7 +771,6 @@ function filterPoi(obj) {
     map.addLayer(poiLayer);
 }
 
-
 function filtrate(){
 	distance = document.getElementById("distance").value;
 	led = document.getElementById("led").value;
@@ -776,13 +786,59 @@ function filtrate(){
 	if(ledMarker != null)
 		break;
 	}
-	
 	console.log(ledMarker);
-	let q = new esri.tasks.Query();
-	q.spatialRelationship = esri.tasks.Query.SPATIAL_REL_CONTAINS;
-	console.log(q);
-	//let ft = new esri.layers.FeatureLayer();
-	//console.log(ft);
+	doBuffer(ledMarker, distance);
+	/*
+	let circleArr = new Array();
+	
+	for(let i = 0; i < allPOIs.length; i++) {
+		for(let j = 0; j < allPOIs[i].length; j++) {
+			circleArr.push(new esri.geometry.Circle(allPOIs[i][j].geometry, {"radius": distance}));
+		}
+	}
+
+	for(let i = 0; i < circleArr.length; i++) {
+		console.log(circleArr[i].contains(ledMarker.geometry.paths[0][i]));
+		
+	}
+	*/
+}
+
+function doBuffer(trail, distance) {
+
+    map.graphics.clear();
+	
+    var params = new esri.tasks.BufferParameters();
+	params.geometries = [];
+	params.distances = [distance];
+	
+	for(let i = 0; i < allPOIs.length; i++) {
+		for(let j = 0; j < allPOIs[i].length; j++) {
+			params.geometries.push(allPOIs[i][j].geometry);
+		}
+	}
+
+    //buffer in linear units such as meters, km, miles etc.
+    params.unit = esri.tasks.GeometryService.UNIT_KILOMETER;
+    params.outSpatialReference = map.spatialReference;
+	
+    gsvc.buffer(params, showBuffer);
+}
+
+function showBuffer(geometries) {
+	//console.log("geom",geometries);
+    var symbol = new esri.symbol.SimpleFillSymbol(
+    esri.symbol.SimpleFillSymbol.STYLE_SOLID,
+        new esri.symbol.SimpleLineSymbol(
+            esri.symbol.SimpleLineSymbol.STYLE_SOLID,
+            new dojo.Color([0,0,255,0.65]), 2
+        ),
+      new dojo.Color([0,0,255,0.35])
+    );
+    dojo.forEach(geometries, function(geometry) {
+        var graphic = new esri.Graphic(geometry,symbol);
+        map.graphics.add(graphic);
+    });
 }
 
 function generateOptions(pointData){

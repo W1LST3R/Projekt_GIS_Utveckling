@@ -1,8 +1,6 @@
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
 import { getFirestore, getDocs, addDoc, collection, doc} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-import {getPermData} from "http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -19,12 +17,19 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 const db = getFirestore();
-const colRef = collection(db,"poiDataPerm")
-const dataToAdd = getPermData();
-console.log(dataToAdd);
+const colRefPoi = collection(db,"poiDataPerm")
+const colRefTra = collection(db,"trailDataPerm")
+const colRefTraInfo = collection(db,"trailDataPermInfo")
+const colRefCat = collection(db,"categoryDataPerm")
+/*const dataToAdd = getPermData();
+console.log(dataToAdd);*/
 //const permPoiDataGet = await 
 var pois = [];
-  getDocs(colRef)
+var trails = [];
+var categorys = [];
+var trailsInfo = [];
+
+await getDocs(colRefPoi)
   .then((snapshot)=>{
     snapshot.docs.forEach((doc) => {
       pois.push({...doc.data()})
@@ -34,9 +39,49 @@ var pois = [];
       console.log(err.message)
   });
 
-addDoc(collection(db,"poiDataPerm"),{
-  dataToAdd
-});
+  await getDocs(colRefTra)
+  .then((snapshot)=>{
+    snapshot.docs.forEach((doc) => {
+      trails.push({...doc.data()})
+    })
+  })
+  .catch(err =>{
+      console.log(err.message)
+  });
 
- 
-export default pois;
+  await getDocs(colRefCat)
+  .then((snapshot)=>{
+    snapshot.docs.forEach((doc) => {
+      categorys.push({...doc.data()})
+    })
+  })
+  .catch(err =>{
+      console.log(err.message)
+  });
+
+export function getPermPoi(){
+    return pois;
+ }
+
+export function getPermTra(){
+  return {"perm":trails};
+}
+
+export function getPermCat(){
+  return {"perm":categorys};
+}
+
+export function addPermPoi(dataToAdd){
+  addDoc(collection(db,"poiDataPerm"),dataToAdd
+  );
+}
+
+export function addPermTra(dataToAdd){
+  addDoc(collection(db,"trailDataPerm"),dataToAdd
+  );
+}
+export function addPermCat(dataToAdd){
+  addDoc(collection(db,"categoryDataPerm"),dataToAdd
+  );
+}
+

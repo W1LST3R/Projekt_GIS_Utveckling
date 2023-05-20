@@ -1,198 +1,236 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-	<title>DVG315 Projektet</title>
-	<meta charset="utf-8" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-	
-	<script src="http://js.arcgis.com/3.39/init.js"></script>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-	<link rel="stylesheet" href="http://js.arcgis.com/3.39/dijit/themes/claro/claro.css">
-	<link rel="stylesheet" href="http://js.arcgis.com/3.39/esri/css/esri.css">
-	<link rel="stylesheet" href="project.css">
+	<head>
+		<title>DVG315 Projektet</title>
+		<!-- För att kunna använda svenska tecken -->
+		<meta charset="utf-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+		
+		<!-- koppling till css och js från esri -->
+		<script src="http://js.arcgis.com/3.39/init.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+		<link rel="stylesheet" href="http://js.arcgis.com/3.39/dijit/themes/claro/claro.css">
+		<link rel="stylesheet" href="http://js.arcgis.com/3.39/esri/css/esri.css">
 
-	<script src="project.js"></script>
-</head>
-<body class="claro">
-	<header>
-	<div class="container">
-	
-		<!-- Show Trails -->
-		<div class="popup">
-		<button type="button" class="mapButton" onclick="showTrailPopup()">Leder</button>
-		<span class="popuptext" id="trailPopup">
-			<div class="checkbox">
-				<label for="hideShowAll"><input type="checkbox" onclick="toggleTrails(this)">Visa/Göm alla</label>
-				<br />
-				<label for="bikingWalking"><input type="checkbox" value="0" id="bikingWalking" onclick="showTrail(this)" name="trailCheck">Cykling och vandring</label>
-				<label for="walking"><input type="checkbox" value="1" id="walking" onclick="showTrail(this)" name="trailCheck">Vandring</label>
-				<label for="biking"><input type="checkbox" value="2" id="biking" onclick="showTrail(this)" name="trailCheck">Cykling</label>
-				<span id="myCategories">
-				</span>
-			</div>
-			<div class="popup">
-			<button type="button" class="mapButton" onclick="showFilterTrail()">Filtrera enskilda leder</button>
-			<span class="popuptext" id="filterTrails">
-			<div class="checkbox" id="trailContent">
-			</div>
-			</span>
-			</div>
-		</span>
+		<!-- koppling till vår css och js -->
+		<link rel="stylesheet" href="project.css">
+		<script src="project.js" type="module" defer></script>
+	</head>
+	<body class="claro">
+		<div id="mapDiv">
+			<header>
+				<div class="container">
+		
+					<!-- Show Trails -->
+					<div class="popup">
+						<button type="button" class="mapButton" id="sTP">Leder</button>
+						<span class="popuptext" id="trailPopup">
+							<div class="checkbox">
+								<label for="hideShowAll"><input type="checkbox" id="hideShowAll">Visa/Göm alla</label>
+								<br />
+								<label for="bikingWalking"><input type="checkbox" value="0" id="bikingWalking" name="trailCheck">Cykling och vandring</label>
+								<label for="walking"><input type="checkbox" value="1" id="walking" name="trailCheck">Vandring</label>
+								<label for="biking"><input type="checkbox" value="2" id="biking" name="trailCheck">Cykling</label>
+								<label for="biking"><input type="checkbox" value="3" id="permTraShow" name="trailCheck">Permanenta Leder</label>
+								<span id="myCategories">
+								</span>
+							</div>
+							<div class="popup">
+								<button type="button" class="mapButton" id="sFT">Filtrera enskilda leder</button>
+								<span class="popuptext" id="filterTrails">
+									<div class="checkbox" id="trailContent" style="height:250px"></div>
+								</span>
+							</div>
+						</span>
+					</div>
+			
+					<!-- Show POI -->
+					<div class="popup">
+						<button type="button" class="mapButton" id="sP">Intressepunkter</button>
+						<span class="popuptext" id="poiPopup">
+							<div class="checkbox">
+								<label for="hideOrShow">
+									<input type="checkbox" checked="true" id="hideOrShow">
+									Visa/Göm alla
+								</label>
+								<br />
+								<label for="toilet">
+									<input type="checkbox" value="0" checked="true"  id="toilet" name="poiCheck">
+									Toaletter <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg">
+								</label>
+								<label for="fireplace">
+									<input type="checkbox" value="1" checked="true" id="fireplace" name="poiCheck">
+									Eldplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg">
+								</label>
+								<label for="food">
+									<input type="checkbox" value="2" checked="true" id="food" name="poiCheck">
+									Matplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Food.jpg">
+								</label>
+								<label for="information">
+									<input type="checkbox" value="3" checked="true" id="information" name="poiCheck">
+									Information <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Info.png">
+								</label>
+								<label for="restArea">
+									<input type="checkbox" value="4" checked="true" id="restArea" name="poiCheck">
+									Rastplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Bench.png">
+								</label>
+								<label for="parking">
+									<input type="checkbox" value="5" checked="true" id="parking" name="poiCheck">
+									Parkering <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Parking.jpg">
+								</label>
+								<label for="waterPost">
+									<input type="checkbox" value="6" checked="true" id="waterPost" name="poiCheck">
+									Vatten <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Water.jpg">
+								</label>
+								<label for="windShelter">
+									<input type="checkbox" value="7" checked="true" id="windShelter" name="poiCheck">
+									Vindskydd <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WindShelter.jpg">
+								</label>
+								<label for="cabin">
+									<input type="checkbox" value="8" checked="true" id="cabin" name="poiCheck">
+									Stuga <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Cabin.png">
+								</label>
+								<label for="square">
+									<input type="checkbox" value="9" checked="true" id="square" name="poiCheck">
+									Kvadrat
+								</label>
+								<label for="diamond">
+									<input type="checkbox" value="10" checked="true" id="diamond" name="poiCheck">
+									Diamant
+								</label>
+								<label for="circle">
+									<input type="checkbox" value="11" checked="true" id="circle" name="poiCheck">
+									Circel
+								</label>
+								<label for="triangle">
+									<input type="checkbox" value="12" checked="true" id="triangle" name="poiCheck">
+									Triangel
+								</label>
+								<label for="TempPoint">
+									<input type="checkbox" value="13" checked="true" id="TempPoint" name="poiCheck">
+									Temporära punkter
+								</label>
+							</div>
+						</span>
+					</div>
+					
+					<!-- Make POI -->
+					<div class="popup">			
+						<button type="button" class="mapButton" id="poiBtn">Skapa en egen markör</button>
+						
+						<span class="popuptext" id="myPopup">
+							
+							<p style="color:black">Bestäm inställning för din markör och klicka sedan på kartan för att placera ut den.</p>
+								<td colspan="2" style="text-align:right;color:black">
+									<span style="color:black">temporärt</span><input type="radio" checked="true" name="radio" id="tempPoi">
+									</br>
+									<span style="color:black">permanent</span><input type="radio" name="radio" id="permPoi">
+								</td>
+							<input type="text" id="poiName" placeholder="Namn på din markör..." onfocus="this.value=''">
+							<textarea type="text" id="poiInfo" placeholder="Info för din markör..." onfocus="this.value=''"></textarea>
+							<select name="shapes" id="shape">
+								<option selected disabled>Välj en symbol</option>
+								<option value="triangle">Triangel</option>
+								<option value="circle">Cirkel</option>
+								<option value="diamond">Diamant</option>
+								<option value="square">Fyrkant</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Bench.png">Rastplats</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg">Eldplats</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Food.jpg">Matplats</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Parking.jpg">Parkering</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Info.png">Info</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg">WC</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Cabin.png">Stuga</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Water.jpg">Vatten post</option>
+								<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WindShelter.jpg">Vindskydd</option>
+							</select>
+							<select name="colors" id="colorPoi">
+								<option selected disabled>Välj en färg</option>
+								<option value="red">Röd</option>
+								<option value="blue">Blå</option>
+								<option value="black">Svart</option>
+								<option value="white">Vit</option>
+							</select>
+							<input type="text" id="poiPic" placeholder="Länk för bild..." onfocus="this.value=''">
+							<button type="button" class="mapButton" style="background-color:#f04f4f" id="rMP">Ta bort senaste markör</button>
+						</span>
+					</div>
+					
+					<!-- Make trail -->
+					<div class="popup">
+						<button type="button" class="mapButton" id="trailButton">Skapa en egen led</button>
+						<span class="popuptext" id="myTrail">
+							<p style="color:black">(1) Gör inställningar för din led<br>(2) Klicka sedan på kartan för att sätta ut punkter<br>(3) Klicka på "Skapa led" för att generera leden</p>
+							<button type="button" id="mC">Skapa en ny kategori</button>
+							<div id="myCategoryMenu" style="display:none">
+								<p style="color:black">(1) Bestäm inställningar för din kategori.</br>(2) Stäng denna meny för att spara kategorin.</br>(3) Välj din nya kategori i listan.</p>
+								<td colspan="2" style="text-align:right;color:black">
+									<span style="color:black">temporärt</span><input type="radio" checked="true" name="radio" id="tempCat">
+									</br>
+									<span style="color:black">permanent</span><input type="radio" name="radio" id="permCat">
+								</td>
+								<input type="text" id="categoryName" placeholder="Namn på kategori..." onfocus="this.value=''">
+								<select name="categoryColor" id="categoryColor">
+									<option selected disabled value="rgba(255,255,255,0.8)">Välj färg</option>
+									<option value="rgba(255,0,0,0.8)">Röd</option>
+									<option value="rgba(0,255,0,0.8)">Grön</option>
+									<option value="rgba(0,0,255,0.8)">Blå</option>
+								</select>
+								<select name="categoryStyle" id="categoryStyle">
+									<option selected disabled value="solid">Välj stil</option>
+									<option value="solid">Solid</option>
+									<option value="dash">Streckad</option>
+									<option value="dot">Punkter</option>
+								</select>
+								<select name="categoryWidth" id="categoryWidth">
+									<option selected disabled value="7">Välj storlek</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select>
+							</div>
+							<div id="trailMenu">
+								<td colspan="2" style="text-align:right;color:black">
+									<span style="color:black">temporärt</span><input type="radio" checked="true" name="radio" id="tempTra">
+									</br>
+									<span style="color:black">permanent</span><input type="radio" name="radio" id="permTra">
+								</td>
+								<br />
+								<select name="typeOfTrail" id="trails">
+									<option selected disabled value="0">Välj kategori</option>
+									<option value="0" id="cykelOchVandring">Cykel och Vandring</option>
+									<option value="1" id="vandring">Vandring</option>
+									<option value="2" id="cykel">Cykel</option>
+								</select>
+								<input type="text" id="trailName" placeholder="Namn på din led..." onfocus="this.value=''">
+								<input type="text" id="trailInfo" placeholder="Info för din led..." onfocus="this.value=''"> 
+								<button type="button" id="mTT">Skapa led</button>
+							</div>
+						</span>
+					</div>
+						
+						<!-- Filter based on distance -->
+					<div class="popup">
+						<button type="button" class="mapButton" id="fP">Filtrering av POIs baserat på geografiskt avstånd.</button>
+						<span class="popuptext" id="myFilter">
+							<select name="led" id="led">
+								<option selected disabled>Välj en led</option>
+							</select>
+							<input type="number" id="distance" placeholder="Avstånd i kilometer">
+							<button type="button" id="f">Filtrera</button>
+						</span>
+					</div>
+					
+				</div>	
+			</header>
 		</div>
-		
-		<!-- Show POI -->
-		<div class="popup">
-		<button type="button" class="mapButton" onclick="showPoi()">Sevärdigheter</button>
-		<span class="popuptext" id="poiPopup">
-			<div class="checkbox">
-				<p>Filtrera sevärdigheter</p>
-				<label for="hideOrShow">
-					<input type="checkbox" checked="true" onclick="togglePois(this)">
-					Visa/Göm alla
-				</label>
-				<br />
-				<label for="toilet">
-					<input type="checkbox" value="0" checked="true" onclick="hideShow(this)" id="toilet" name="poiCheck">
-					Toaletter <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg">
-				</label>
-				<label for="fireplace">
-					<input type="checkbox" value="1" checked="true" onclick="hideShow(this)" id="fireplace" name="poiCheck">
-					Eldplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg">
-				</label>
-				<label for="food">
-					<input type="checkbox" value="2" checked="true" onclick="hideShow(this)" id="food" name="poiCheck">
-					Matplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Food.jpg">
-				</label>
-				<label for="information">
-					<input type="checkbox" value="3" checked="true" onclick="hideShow(this)" id="information" name="poiCheck">
-					Information <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Info.png">
-				</label>
-				<label for="restArea">
-					<input type="checkbox" value="4" checked="true" onclick="hideShow(this)" id="restArea" name="poiCheck">
-					Rastplats <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Bench.png">
-				</label>
-				<label for="parking">
-					<input type="checkbox" value="5" checked="true" onclick="hideShow(this)" id="parking" name="poiCheck">
-					Parkering <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Parking.jpg">
-				</label>
-				<label for="waterPost">
-					<input type="checkbox" value="6" checked="true" onclick="hideShow(this)" id="waterPost" name="poiCheck">
-					Vatten <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Water.jpg">
-				</label>
-				<label for="windShelter">
-					<input type="checkbox" value="7" checked="true" onclick="hideShow(this)" id="windShelter" name="poiCheck">
-					Vindskydd <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WindShelter.jpg">
-				</label>
-				<label for="cabin">
-					<input type="checkbox" value="8" checked="true" onclick="hideShow(this)" id="cabin" name="poiCheck">
-					Stuga <img src="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Cabin.png">
-				</label>
-			</div>
-		</span>
-		</div>
-		
-		<!-- Make POI -->
-		<div class="popup">
-		<button type="button" class="mapButton" onclick="makePoi(this)">Skapa en egen markör</button>
-		<span class="popuptext" id="myPopup">
-			<p style="color:black">Bestäm inställning för din markör och klicka sedan på kartan för att placera ut den.</p>
-			<input type="text" id="poiName" value="Namn på din markör..." onfocus="this.value=''">
-			<textarea type="text" id="poiInfo" placeholder="Info för din markör..." onfocus="this.value=''"></textarea>
-			<select name="shapes" id="shape">
-				<option selected disabled>Välj en symbol</option>
-				<option value="triangle">Triangel</option>
-				<option value="circle">Cirkel</option>
-				<option value="diamond">Diamant</option>
-				<option value="square">Fyrkant</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Bench.png">Rastplats</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg">Eldplats</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Food.jpg">Matplats</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Parking.jpg">Parkering</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Info.png">Info</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg">WC</option>
-				<option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Cabin.png">Stuga</option>
-                <option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Water.jpg">Vatten post</option>
-                <option value="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WindShelter.jpg">Vindskydd</option>
-				<!--<option value=""></option>-->
-			</select>
-			<select name="colors" id="colorPoi">
-				<option selected disabled>Välj en färg</option>
-				<option value="red">Röd</option>
-				<option value="blue">Blå</option>
-				<option value="black">Svart</option>
-				<option value="white">Vit</option>
-			</select>
-			<input type="text" id="poiPic" value="Länk för bild..." onfocus="this.value=''">
-			<button type="button" class="mapButton" style="background-color:#f04f4f" onclick="removeMyPoi()">Ta bort senaste markör</button>
-		</span>
-		</div>
-		
-		<!-- Make trail -->
-		<div class="popup">
-		<button type="button" class="mapButton" onclick="makeTrail()" id="trailButton">Skapa en egen led</button>
-		<span class="popuptext" id="myTrail">
-			<p style="color:black">(1) Gör inställningar för din led<br>(2) Klicka sedan på kartan för att sätta ut punkter<br>(3) Klicka på "Skapa led" för att generera leden</p>
-			<button type="button" onclick="makeCategory(this)">Skapa en ny kategori</button>
-			<div id="myCategoryMenu" style="display:none">
-				<p style="color:black">(1) Bestäm inställningar för din kategori.<br />(2) Stäng denna meny för att spara kategorin.<br/ >(3) Välj din nya kategori i listan.</p>
-				<input type="text" id="categoryName" value="Namn på kategori..." onfocus="this.value=''">
-				<select name="categoryColor" id="categoryColor">
-					<option selected disabled value="rgba(255,255,255,0.8)">Välj färg</option>
-					<option value="rgba(255,0,0,0.8)">Röd</option>
-					<option value="rgba(0,255,0,0.8)">Grön</option>
-					<option value="rgba(0,0,255,0.8)">Blå</option>
-				</select>
-				<select name="categoryStyle" id="categoryStyle">
-					<option selected disabled value="solid">Välj stil</option>
-					<option value="solid">Solid</option>
-					<option value="dash">Streckad</option>
-					<option value="dot">Punkter</option>
-				</select>
-				<select name="categoryWidth" id="categoryWidth">
-					<option selected disabled value="7">Välj storlek</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-					<option value="11">11</option>
-					<option value="12">12</option>
-				</select>
-			</div>
-			<div id="trailMenu">
-			<br />
-			<select name="typeOfTrail" id="trails">
-				<option selected disabled value="0">Välj kategori</option>
-				<option value="0">Cykel och Vandring</option>
-				<option value="1">Vandring</option>
-				<option value="2">Cykel</option>
-			</select>
-			<input type="text" id="trailName" value="Namn på din led..." onfocus="this.value=''">
-			<input type="text" id="trailInfo" value="Info för din led..." onfocus="this.value=''"> 
-			<button type="button" onclick="makeThisTrail()">Skapa led</button>
-			</div>
-		</span>
-		</div>
-		
-		<!-- Filter based on distance -->
-		<div class="popup">
-		<button type="button" class="mapButton" onclick="filterPoi(this)">Filtrering av POIs baserat på geografiskt avstånd.</button>
-			<span class="popuptext" id="myFilter">
-				<select name="led" id="led">
-					<option selected disabled>Välj en led</option>
-				</select>
-				<input type="number" id="distance" placeholder="Avstånd i meter">
-				<button type="button" onclick="filtrate()">Filtrera</button>
-		</span>
-		</div>
-		
-	</div>
-		
-
-		
-	</header>
-	<div id="mapDiv"></div>
-</body>
+	</body>
 </html>
+
+

@@ -41,3 +41,7 @@ http://www.student.hig.se/~22jono03/udgis/Projekt_GIS_Utveckling-main/
 
 Biking_elevation161008.json
 Österbybruksslingan
+
+radio knappar på skapa egen led och markör (den ska vara i klickad).
+skapa en ny kategori ger undefined om man spammar knappen.
+fixa css för flikar o knappar som blir för stora/små.

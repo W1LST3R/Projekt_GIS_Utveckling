@@ -331,18 +331,11 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	
 	getPointData();
 	populateTrailFiltration();
-	
-	enableMouseOut()
-	
-	function enableMouseOut() {
-		if(map.graphics != null) {
-			map.graphics.enableMouseEvents();
-			map.graphics.on("mouse-out", removeHighlight);
-		} else alert("map.graphics is null for some reason")
-	}
-	
-	//Highlight on hover
-	pointLayer.on("mouse-over", function(evt){
+	//Highlight on down
+	pointLayer.on("mouse-down", function(evt){
+  		map.graphics.clear();
+		map.infoWindow.hide();
+		
 		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
 		highlightSymbol.style = "solid";
 		highlightSymbol.width = 6;
@@ -366,34 +359,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
         map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång" + info);
 		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
 	});
-	//End highlight on hover
-	
-	//Hover for markers
-	poiLayer.on("mouse-over", function(evt){
-		
-		var highlightSymbol = new esri.symbol.SimpleMarkerSymbol();
-		highlightSymbol.color = "rgba(0,0,0,0)";
-		
-		if(evt.graphic.symbol.style == undefined) highlightSymbol.style = "square";
-		else highlightSymbol.style = evt.graphic.symbol.style;
-		if(evt.graphic.symbol.width != undefined) highlightSymbol.size = 19.5;
-		else highlightSymbol.size = evt.graphic.symbol.size+1;
-		
-		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol);
-		map.graphics.add(highlightGraphic);
-		map.infoWindow.setTitle(evt.graphic.symbol.name);
-        map.infoWindow.setContent(evt.graphic.symbol.info+'<img src='+evt.graphic.symbol.pic+'>');
-		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
-	});
-
 });
-
-//Funktion för att ta bort highlight av led
-function removeHighlight() {
-	//console.log("remove");
-    map.graphics.clear();
-	map.infoWindow.hide();
-}
 
 /*******************************************************
 Funktioner för hämtning  och bearbetning av JSON data

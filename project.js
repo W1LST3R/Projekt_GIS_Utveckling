@@ -264,7 +264,8 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 				
 				Symbol = SimpleMarkerSymbol;
 			}
-
+			
+			Symbol.pic = pic;
 			Symbol.name = namn;
 			Symbol.info = info;
 
@@ -374,7 +375,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol);
 		map.graphics.add(highlightGraphic);
 		map.infoWindow.setTitle(evt.graphic.symbol.name);
-        map.infoWindow.setContent(evt.graphic.symbol.info+'<img src='+evt.graphic.symbol.pic+'>');
+        	map.infoWindow.setContent(evt.graphic.symbol.info+evt.graphic.symbol.pic);
 		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
 		
 		enableMouseOut();

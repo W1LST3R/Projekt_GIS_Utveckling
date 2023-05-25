@@ -239,7 +239,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			console.log(namn)
 			console.log(info)
 			//console.log()
-
+			if(shape == "Välj en symbol") shape = "circle";
 			if(namn == "") namn = "En markör";
 				
 			if(info == undefined) info = "";

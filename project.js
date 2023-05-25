@@ -904,21 +904,7 @@ function makePOIs(pointData){
 															trianglePois.push(graphic)
 															poiLayer.add(trianglePois[trianglePois.length-1])
 														}
-	}
-	
-	allPOIs.push(wcPois)
-	allPOIs.push(firePlacePois)	
-	allPOIs.push(foodPois)	
-	allPOIs.push(infoPois)
-	allPOIs.push(restAreaPois)
-	allPOIs.push(parkingPois)
-	allPOIs.push(waterPois)
-	allPOIs.push(windShelterPois)
-	allPOIs.push(cabinPois)
-	allPOIs.push(fyrkantPois)
-	allPOIs.push(diamantPois)
-	allPOIs.push(cirkelPois)
-	allPOIs.push(trianglePois)									
+	}									
 }
 
 //Funktion för att visa/gömma utsatta POIs på kartan (gäller inte användarsskapade pois)
@@ -996,30 +982,22 @@ function makeCategory(obj) {
 				categorySettings.style.display = "none";
 				trailMenu.style.display = "block";
 			}
+		
+			name = document.getElementById("categoryName").value;
+			color = document.getElementById("categoryColor").value;
+			style = document.getElementById("categoryStyle").value;
+			width = document.getElementById("categoryWidth").value;
 
 			if(document.querySelector("#permCat").checked){
-				name = document.getElementById("categoryName").value;
-				color = document.getElementById("categoryColor").value;
-				style = document.getElementById("categoryStyle").value;
-				width = document.getElementById("categoryWidth").value;
 				var permCatData = {
 					"name":name,
 					"color":color,
 					"style":style,
 					"width":width
-					}
-					console.log(permCatData)
-				permFun.addPermCat(permCatData);
-			}else{
-				if(document.querySelector("#tempCat").checked){
-					name = document.getElementById("categoryName").value;
-					color = document.getElementById("categoryColor").value;
-					style = document.getElementById("categoryStyle").value;
-					width = document.getElementById("categoryWidth").value;
 				}
+				console.log(permCatData)
+				permFun.addPermCat(permCatData);
 			}
-
-			
 		
 		if(name != "" && !makeCategoryPressed) {
 			

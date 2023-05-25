@@ -1276,6 +1276,10 @@ function filtrate(){
 	var led = document.getElementById("led").value;
 	ledMarker = null;
 	
+	if (distance > 1000) {
+        	distance = 1000;
+   	}
+	
 	for(var i = 0; i < markers.length; i++){
 		for(var j = 0; j < markers[i].length; j++){
 			if (markers[i][j].symbol.name == led){

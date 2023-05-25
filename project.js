@@ -235,10 +235,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			let info = document.querySelector("#poiInfo").value;
 			let namn = document.querySelector("#poiName").value;
 			let pic = document.querySelector("#poiPic").value;
-			
-			console.log(namn)
-			console.log(info)
-			//console.log()
+		
 			if(shape == "Välj en symbol") shape = "circle";
 			if(namn == "") namn = "En markör";
 				

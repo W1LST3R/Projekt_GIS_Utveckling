@@ -44,7 +44,7 @@ Biking_elevation161008.json
 
 radio knappar på skapa egen led och markör (den ska vara i klickad). /löst
 
-skapa en ny kategori ger undefined om man spammar knappen.
+skapa en ny kategori ger undefined om man spammar knappen. /löst
 
 fixa css för flikar o knappar som blir för stora/små. /löst
 

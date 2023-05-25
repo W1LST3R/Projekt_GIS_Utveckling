@@ -148,12 +148,12 @@ var wcPois = [];
 var cabinPois = [];
 var waterPois = [];
 var windShelterPois = [];
-var tempPoint = [];
+var tempPois = [];
 
 //Global array för förbestämda POIs
 var allPOIs = [wcPois,firePlacePois,foodPois,infoPois,restAreaPois,parkingPois,waterPois,
-	windShelterPois,cabinPois,fyrkantPois,diamantPois,cirkelPois,trianglePois]; 
-var poiCount = 0;
+	windShelterPois,cabinPois,fyrkantPois,diamantPois,cirkelPois,trianglePois,tempPois]; 
+
 
 //Global array för förbestämda Trails
 var markers = new Array();
@@ -235,11 +235,10 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			let info = document.querySelector("#poiInfo").value;
 			let namn = document.querySelector("#poiName").value;
 			let pic = document.querySelector("#poiPic").value;
-						
-			let checkPic = /^http/i;
-
-			if(checkPic.test(pic)) pic = "<img src="+pic+">";
-			else pic = "";
+			
+			console.log(namn)
+			console.log(info)
+			//console.log()
 
 			if(namn == "") namn = "En markör";
 				
@@ -247,38 +246,21 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			
 			info = "Longitude: " + currentLon + "<br />Latitude: " + currentLat + "<br /><br />" + info;
 			
-			let Symbol;
-			
-			if(shape.substring(0,1) == "h") {
-				var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
-				PictureMarkerSymbol.setUrl(shape);
-				PictureMarkerSymbol.setHeight(20);
-				PictureMarkerSymbol.setWidth(20);
-				
-				Symbol = PictureMarkerSymbol;
-			} else {
-				var SimpleMarkerSymbol = new esri.symbol.SimpleMarkerSymbol();
-				SimpleMarkerSymbol.color = color;
-				SimpleMarkerSymbol.style = shape;
-				SimpleMarkerSymbol.size = 14;
-				
-				Symbol = SimpleMarkerSymbol;
-			}
-			
+			let Symbol = checkPoiLogo(shape, color);
+			pic = checkPoiPic(pic);
+
 			Symbol.pic = pic;
 			Symbol.name = namn;
 			Symbol.info = info;
-
 			permPoiData = {
 				"latitude" : currentLat,
 				"longitude"	: currentLon,
 				"logo" : shape,
 				"color"	: color,
-				"picture" : document.querySelector("#poiPic").value,
+				"picture" : pic,
 				"name" : namn,
 				"description" : info,
 			}
-
 			var graphic = new esri.Graphic(new esri.geometry.Point(currentLon, currentLat), Symbol).setInfoTemplate(new esri.InfoTemplate(namn, info + pic));
 			if(document.querySelector("#permPoi").checked){
 				permFun.addPermPoi(permPoiData);
@@ -287,8 +269,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 				if(document.querySelector("#tempPoi").checked){
 					poiLayer.add(graphic);
 					myPoiArr.push(graphic);
-					tempPoint.push(graphic);
-					allPOIs.push(tempPoint);
+					tempPois.push(graphic);
 				}
 			}
 		}
@@ -514,24 +495,26 @@ function makeLine(pointData) {
 			}
 		});
 
+		var trailIndex = wichTrailIndex(etapp.charAt(0));
 		//Skapa polyline
 		var poly = new esri.geometry.Polyline();
 		poly.addPath(path);
 		
 		//Skapa symbolen för polylinen
-		
 		var symbol = new esri.symbol.SimpleLineSymbol();
 		symbol.width = 5;
 		symbol.name = name;
 		symbol.distance = Number(length);
-
+		
+		
+		
 		//Style for biking and walking trails
-		if(etapp.charAt(0) == "E" || etapp.charAt(0) == "t") {
+		if(trailIndex==0) {
 			symbol.color = "rgba(78,123,212,0.8)";
 			symbol.style = "dash";
 		}
 		//Style for walking trails
-		else if(etapp.charAt(0) == "W") {
+		else if(trailIndex==1) {
 			symbol.color = "rgba(252,140,35,0.8)";
 			symbol.style = "dot";
 		} 
@@ -547,20 +530,7 @@ function makeLine(pointData) {
 		graphic.id = count++;
 		
 		//Sparar aktuell led i sin globala Array, gömmer den, och lägger sedan till den på kartlagret
-		if(etapp.charAt(0) == "E" || etapp.charAt(0) == "t") {
-			walkingAndBikingMarkers.push(graphic);
-			walkingAndBikingMarkers[walkingAndBikingMarkers.length-1].hide();
-			pointLayer.add(walkingAndBikingMarkers[walkingAndBikingMarkers.length-1]);
-		}
-		else if(etapp.charAt(0) == "W") {
-			walkingMarkers.push(graphic);
-			walkingMarkers[walkingMarkers.length-1].hide();
-			pointLayer.add(walkingMarkers[walkingMarkers.length-1]);
-		} else {
-			bikingMarkers.push(graphic);
-			bikingMarkers[bikingMarkers.length-1].hide();
-			pointLayer.add(bikingMarkers[bikingMarkers.length-1]);
-		}
+		checkWichTrail(trailIndex,graphic);
 	}else{
 		
 		for(let i = 0; i < pointData.perm.length;i++){
@@ -602,32 +572,46 @@ function makeLine(pointData) {
 			//Skapa polyline
 			var poly = new esri.geometry.Polyline();
 			poly.addPath(path);
-			
 			//Skapa det grafiska objektet med polyline och symbolen
 			var graphic = new esri.Graphic(poly, symbol);
 			graphic.id = count++;
-
-			if(trailIndex==0) {
-				walkingAndBikingMarkers.push(graphic);
-				walkingAndBikingMarkers[walkingAndBikingMarkers.length-1].hide();
-				pointLayer.add(walkingAndBikingMarkers[walkingAndBikingMarkers.length-1]);
-			}
-			else if(trailIndex==1) {
-				walkingMarkers.push(graphic);
-				walkingMarkers[walkingMarkers.length-1].hide();
-				pointLayer.add(walkingMarkers[walkingMarkers.length-1]);
-			} else if(trailIndex==2){
-				bikingMarkers.push(graphic);
-				bikingMarkers[bikingMarkers.length-1].hide();
-				pointLayer.add(bikingMarkers[bikingMarkers.length-1]);
-			} else{
-				permTrails.push(graphic);
-				permTrails[permTrails.length-1].hide();
-				pointLayer.add(permTrails[permTrails.length-1]);
-			}
+			checkWichTrail(trailIndex,graphic);
 		}
 	}
 
+}
+
+function wichTrailIndex(index){
+	if(index == "E" || index == "t") {
+		return 0;
+	}
+	else if(index == "W") {
+		return 1;
+	} 
+	else {
+		return 2;
+	}
+}
+
+function checkWichTrail(trailIndex,graphic){
+	if(trailIndex==0) {
+		walkingAndBikingMarkers.push(graphic);
+		walkingAndBikingMarkers[walkingAndBikingMarkers.length-1].hide();
+		pointLayer.add(walkingAndBikingMarkers[walkingAndBikingMarkers.length-1]);
+	}
+	else if(trailIndex==1) {
+		walkingMarkers.push(graphic);
+		walkingMarkers[walkingMarkers.length-1].hide();
+		pointLayer.add(walkingMarkers[walkingMarkers.length-1]);
+	} else if(trailIndex==2){
+		bikingMarkers.push(graphic);
+		bikingMarkers[bikingMarkers.length-1].hide();
+		pointLayer.add(bikingMarkers[bikingMarkers.length-1]);
+	} else{
+		permTrails.push(graphic);
+		permTrails[permTrails.length-1].hide();
+		pointLayer.add(permTrails[permTrails.length-1]);
+	}
 }
 	
 /*******************************************************
@@ -771,10 +755,6 @@ function makePoi() {
 }
 
 function makePOIs(pointData){
-	var index = 0;
-	var Symbol;
-	let checkPic = /^http/i;
-
 	if(pointData.permPoi==undefined){
 		//ForEach loop genom JSON data 
 		dojo.forEach(pointData.poi, function(poi) {
@@ -787,77 +767,18 @@ function makePOIs(pointData){
 			var color = poi.color;
 			var rights = poi.rights;
 			var point = new esri.geometry.Point(lng,lat);
-			
-			if(rights == undefined){
-				rights = "";
-			}
-			
-			if(checkPic.test(pic)) pic = pic;
-			else pic = "";
 
-	
-			if(logo.substring(0,1) == "h") {
-				var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
-				PictureMarkerSymbol.setUrl(logo);
-				PictureMarkerSymbol.setHeight(20);
-				PictureMarkerSymbol.setWidth(20);
-				
-				Symbol = PictureMarkerSymbol;
-			} else {
-				var SimpleMarkerSymbol = new esri.symbol.SimpleMarkerSymbol();
-				SimpleMarkerSymbol.color = color;
-				SimpleMarkerSymbol.style = logo;
-				SimpleMarkerSymbol.size = 14;
-				
-				Symbol = SimpleMarkerSymbol;
-			}
+			var point = new esri.geometry.Point(lng,lat);
+			var Symbol = checkPoiLogo(logo,color);
+			pic = checkPoiPic(pic);
+			rights = checkPoiRights(rights);
+
 			Symbol.name = name;
 			Symbol.info = info;
 			Symbol.pic = pic;
 			Symbol.logo = logo;
-			var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+"<img src="+pic+">"+rights));
-			graphic.id = poiCount++;
-			graphic.index = index++;
-			if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg"){
-				wcPois.push(graphic)
-				poiLayer.add(wcPois[wcPois.length-1])
-			}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg"){
-				firePlacePois.push(graphic)
-					poiLayer.add(firePlacePois[firePlacePois.length-1])
-				}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Food.jpg"){
-					foodPois.push(graphic)
-					poiLayer.add(foodPois[foodPois.length-1])
-					}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Info.png"){
-						infoPois.push(graphic)
-						poiLayer.add(infoPois[infoPois.length-1])
-						}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Bench.png"){
-							restAreaPois.push(graphic)
-							poiLayer.add(restAreaPois[restAreaPois.length-1])
-							}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Parking.jpg"){
-								parkingPois.push(graphic)
-								poiLayer.add(parkingPois[parkingPois.length-1])
-								}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Water.jpg"){
-									waterPois.push(graphic)
-									poiLayer.add(waterPois[waterPois.length-1])
-									}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WindShelter.jpg"){
-										windShelterPois.push(graphic)
-										poiLayer.add(windShelterPois[windShelterPois.length-1])
-										}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Cabin.png"){
-											cabinPois.push(graphic)
-											poiLayer.add(cabinPois[cabinPois.length-1])
-											}else if(logo=="square"){
-												fyrkantPois.push(graphic)
-												poiLayer.add(fyrkantPois[fyrkantPois.length-1])
-												}else if(logo=="diamond"){
-													diamantPois.push(graphic)
-													poiLayer.add(diamantPois[diamantPois.length-1])
-													}else if(logo=="circle"){
-														cirkelPois.push(graphic)
-														poiLayer.add(cirkelPois[cirkelPois.length-1])
-														}else if(logo=="triangle"){
-															trianglePois.push(graphic)
-															poiLayer.add(trianglePois[trianglePois.length-1])
-														}
+			var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+pic+rights));
+			wichPoiType(logo,graphic)
 		});
 	}else{
 			var lng = pointData.permPoi.longitude;
@@ -868,37 +789,24 @@ function makePOIs(pointData){
 			var logo = pointData.permPoi.logo;
 			var color = pointData.permPoi.color;
 			var rights = pointData.permPoi.rights;
+			
 			var point = new esri.geometry.Point(lng,lat);
+			var Symbol = checkPoiLogo(logo,color);
+			pic = checkPoiPic(pic);
+			rights = checkPoiRights(rights);
 
-			if(rights == undefined){
-				rights = "";
-			}
-			if(checkPic.test(pic)) pic = pic;
-			else pic = "";
-	
-			if(logo.substring(0,1) == "h") {
-				var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
-				PictureMarkerSymbol.setUrl(logo);
-				PictureMarkerSymbol.setHeight(20);
-				PictureMarkerSymbol.setWidth(20);
-				
-				Symbol = PictureMarkerSymbol;
-			} else {
-				var SimpleMarkerSymbol = new esri.symbol.SimpleMarkerSymbol();
-				SimpleMarkerSymbol.color = color;
-				SimpleMarkerSymbol.style = logo;
-				SimpleMarkerSymbol.size = 14;
-				
-				Symbol = SimpleMarkerSymbol;
-			}
 			Symbol.name = name;
 			Symbol.info = info;
 			Symbol.pic = pic;
 			Symbol.logo = logo;
-			var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+"<img src="+pic+">"+rights));
-			graphic.id = poiCount++;
-			graphic.index = index++;
-			if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg"){
+			var graphic = new esri.Graphic(point, Symbol).setInfoTemplate(new esri.InfoTemplate(name,info+pic+rights));
+			wichPoiType(logo,graphic)
+	}							
+}
+
+//väljer rätt array utifrån vilken typ av logotyp det är
+function wichPoiType(logo,graphic){
+	if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/WC.jpg"){
 				wcPois.push(graphic)
 				poiLayer.add(wcPois[wcPois.length-1])
 			}else if(logo=="http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/Pics/Campfire.jpg"){
@@ -938,9 +846,41 @@ function makePOIs(pointData){
 															trianglePois.push(graphic)
 															poiLayer.add(trianglePois[trianglePois.length-1])
 														}
-	}									
 }
 
+function checkPoiLogo(logo,color){
+	if(logo.substring(0,1) == "h") {
+		var PictureMarkerSymbol = new esri.symbol.PictureMarkerSymbol();
+		PictureMarkerSymbol.setUrl(logo);
+		PictureMarkerSymbol.setHeight(20);
+		PictureMarkerSymbol.setWidth(20);
+		
+		return  PictureMarkerSymbol;
+	} else {
+		var SimpleMarkerSymbol = new esri.symbol.SimpleMarkerSymbol();
+		SimpleMarkerSymbol.color = color;
+		SimpleMarkerSymbol.style = logo;
+		SimpleMarkerSymbol.size = 14;
+		
+		return SimpleMarkerSymbol;
+	}
+}
+
+function checkPoiRights(rights){
+	if(rights == undefined){
+		rights = "";
+	}
+	return rights;
+}
+
+function checkPoiPic(pic){
+	var checkPic = /^http/i;
+	if(checkPic.test(pic)){
+		return "<img src="+pic+">";
+	} else{
+		return "<img src=http://www.student.hig.se/~22wipe02/udgis/Projekt_GIS_Utveckling-main/project/data/data/poisForMap/noPic.png>";
+	}
+}
 //Funktion för att visa/gömma utsatta POIs på kartan (gäller inte användarsskapade pois)
 function hideShow(obj) {
 	if(!obj.checked) allPOIs[obj.value].forEach(poi => poi.hide());

@@ -301,7 +301,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		*/
 	});
 	
-	pointLayer = new esri.layers.GraphicsLayer();
+		pointLayer = new esri.layers.GraphicsLayer();
 	map.addLayer(pointLayer);
 	
 	poiLayer = new esri.layers.GraphicsLayer();
@@ -309,6 +309,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	
 	getPointData();
 	populateTrailFiltration();
+	
 	//Highlight on hover
 	pointLayer.on("mouse-over", function(evt){
 		var highlightSymbol = new esri.symbol.SimpleLineSymbol();
@@ -331,7 +332,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		map.graphics.add(highlightGraphic);
 		
 		map.infoWindow.setTitle(name);
-        	map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång" + info);
+        map.infoWindow.setContent("Leden är " + evt.graphic.symbol.distance.toFixed(1) + " km lång" + info);
 		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
 		
 		enableMouseOut();
@@ -352,7 +353,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 		var highlightGraphic = new esri.Graphic(evt.graphic.geometry, highlightSymbol);
 		map.graphics.add(highlightGraphic);
 		map.infoWindow.setTitle(evt.graphic.symbol.name);
-        	map.infoWindow.setContent(evt.graphic.symbol.info+evt.graphic.symbol.pic);
+        map.infoWindow.setContent(evt.graphic.symbol.info+'<img src='+evt.graphic.symbol.pic+'>');
 		map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
 		
 		enableMouseOut();
@@ -368,7 +369,8 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 
 //Funktion för att ta bort highlight av led
 function removeHighlight() {
-	map.graphics.clear();
+	//console.log("remove");
+    map.graphics.clear();
 	map.infoWindow.hide();
 }
 

@@ -388,6 +388,12 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 	}
 });
 
+//Funktion för att ta bort highlight av led
+function removeHighlight() {
+	map.graphics.clear();
+	map.infoWindow.hide();
+}
+
 /*******************************************************
 Funktioner för hämtning  och bearbetning av JSON data
 *******************************************************/

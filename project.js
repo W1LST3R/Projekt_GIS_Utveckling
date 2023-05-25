@@ -270,7 +270,6 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 				}
 			}
 		}
-		allPOIs.push(tempPoint);
 		if(makeTrailPressed) {
 			myTrailLayer = new esri.layers.GraphicsLayer();
 			map.addLayer(myTrailLayer);

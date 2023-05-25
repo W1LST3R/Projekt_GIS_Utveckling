@@ -172,3 +172,7 @@ header {
 #mapDiv_container #mapDiv_layers svg g {
 	cursor:pointer;
 }
+
+select, textarea, button[type='button'], input[type='text'] {
+  width: 100%;
+}

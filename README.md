@@ -50,4 +50,7 @@ fixa css för flikar o knappar som blir för stora/små. /löst
 
 bild laddas inte in för vatten poi. /löst, måste rensa bilder/cache/cookies på webbläsaren
 
-när man skapar permanent punkt men inte väljer någon info så händer det inget på karatn.
+när man skapar permanent punkt men inte väljer någon info så händer det inget på karatn.klar
+
+när man har filtrerat och sen skapar nya markörer så kan man inte hovra på dem
+

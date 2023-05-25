@@ -1275,19 +1275,17 @@ function showBuffer(geometries) {
 
 		var extent = geometry.getExtent();
 		
-		if(i == allPOIs[index].length || allPOIs[index].length == 0) {
+		while(i == allPOIs[index].length || allPOIs[index].length == 0) {
 			index++;
 			i = 0;
+		}	
+
+		if(extent.intersects(ledMarker.geometry)) {
+			allPOIs[index][i++].show();
+			//var graphic = new esri.Graphic(geometry,symbol);
+			//map.graphics.add(graphic);
 		}
-		
-		if(allPOIs[index].length != 0) {
-			if(extent.intersects(ledMarker.geometry)) {
-				allPOIs[index][i++].show();
-				//var graphic = new esri.Graphic(geometry,symbol);
-				//map.graphics.add(graphic);
-			}
-			else allPOIs[index][i++].hide();
-		}
+		else allPOIs[index][i++].hide();
     });
 }
 

@@ -56,3 +56,5 @@ när man har filtrerat och sen skapar nya markörer så kan man inte hovra på d
 
 fixa så att leder från firebase får rätt längd
 
+filtrering tar inte bort de två sista punkterna som är skapde under aktuell session
+

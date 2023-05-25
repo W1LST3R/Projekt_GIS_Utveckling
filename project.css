@@ -173,6 +173,12 @@ header {
 	cursor:pointer;
 }
 
-select, textarea, button[type='button'], input[type='text'] {
+select, button[type='button'] {
   width: 100%;
+}
+input[type='text'], input[type='number'] {
+  width: 95%;
+}
+textarea {
+  width: 96%;
 }

@@ -243,7 +243,7 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 
 			if(namn == "") namn = "En markör";
 				
-			if(info == "Info för din markör...") info = "";
+			if(info == undefined) info = "";
 			
 			info = "Longitude: " + currentLon + "<br />Latitude: " + currentLat + "<br /><br />" + info;
 			

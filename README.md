@@ -43,6 +43,9 @@ Biking_elevation161008.json
 Österbybruksslingan
 
 radio knappar på skapa egen led och markör (den ska vara i klickad).
+
 skapa en ny kategori ger undefined om man spammar knappen.
-fixa css för flikar o knappar som blir för stora/små.
+
+fixa css för flikar o knappar som blir för stora/små. /löst
+
 bild laddas inte in för vatten poi. /löst, måste rensa bilder/cache/cookies på webbläsaren

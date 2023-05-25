@@ -1095,9 +1095,9 @@ function makeThisTrail() {
 		style = markers[index][0].symbol.style;
 		width = markers[index][0].symbol.width;
 	} else {
-		color = userCategories[index-3].color;
-		style = userCategories[index-3].style;
-		width = userCategories[index-3].width;
+		color = userCategories[index-4].color;
+		style = userCategories[index-4].style;
+		width = userCategories[index-4].width;
 	}
 	
 	if(name == "") name = "Min led";

@@ -52,9 +52,9 @@ bild laddas inte in för vatten poi. /löst, måste rensa bilder/cache/cookies p
 
 när man skapar permanent punkt men inte väljer någon info så händer det inget på karatn.klar
 
-när man har filtrerat och sen skapar nya markörer så kan man inte hovra på dem
+när man har filtrerat och sen skapar nya markörer så kan man inte hovra på dem. löst
 
 fixa så att leder från firebase får rätt längd
 
-filtrering tar inte bort de två sista punkterna som är skapde under aktuell session
+filtrering tar inte bort de två sista punkterna som är skapde under aktuell session. löst
 

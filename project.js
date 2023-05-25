@@ -1312,7 +1312,7 @@ function doBuffer(distance) {
 }
 
 function showBuffer(geometries) {
-	console.log(ledMarker);
+	/*
     var symbol = new esri.symbol.SimpleFillSymbol(
     esri.symbol.SimpleFillSymbol.STYLE_SOLID,
         new esri.symbol.SimpleLineSymbol(
@@ -1321,6 +1321,8 @@ function showBuffer(geometries) {
         ),
       new dojo.Color([0,0,255,0.35])
     );
+	*/
+	
 	let i = 0;
 	let index = 0;
 	
@@ -1333,12 +1335,14 @@ function showBuffer(geometries) {
 			i = 0;
 		}
 		
-		if(extent.intersects(ledMarker.geometry)) {
-			allPOIs[index][i++].show();
-			//var graphic = new esri.Graphic(geometry,symbol);
-			//map.graphics.add(graphic);
+		if(allPOIs[index].length != 0) {
+			if(extent.intersects(ledMarker.geometry)) {
+				allPOIs[index][i++].show();
+				//var graphic = new esri.Graphic(geometry,symbol);
+				//map.graphics.add(graphic);
+			}
+			else allPOIs[index][i++].hide();
 		}
-		else allPOIs[index][i++].hide();
     });
 }
 

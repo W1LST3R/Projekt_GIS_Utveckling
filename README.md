@@ -49,3 +49,5 @@ skapa en ny kategori ger undefined om man spammar knappen. /löst
 fixa css för flikar o knappar som blir för stora/små. /löst
 
 bild laddas inte in för vatten poi. /löst, måste rensa bilder/cache/cookies på webbläsaren
+
+när man skapar permanent punkt men inte väljer någon info så händer det inget på karatn.

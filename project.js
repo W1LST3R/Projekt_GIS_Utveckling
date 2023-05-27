@@ -541,15 +541,6 @@ function makeLine(pointData) {
 			var point1;
 			var point2;
 
-			//Skapa symbolen för polylinen
-			var symbol = new esri.symbol.SimpleLineSymbol();
-			symbol.width = pointData.perm[i].width
-			symbol.name = name
-			symbol.distance = Number(length);
-			symbol.color = pointData.perm[i].color
-			symbol.style = pointData.perm[i].style
-			symbol.info = pointData.perm[i].info
-
 			//ForEach loop genom JSON data 
 			dojo.forEach(pointData.perm[i].posts, function(posts) {
 				var lng = posts.longitude;
@@ -566,6 +557,15 @@ function makeLine(pointData) {
 					flag = true;
 				}
 			});
+			
+			//Skapa symbolen för polylinen
+			var symbol = new esri.symbol.SimpleLineSymbol();
+			symbol.width = pointData.perm[i].width
+			symbol.name = name
+			symbol.distance = Number(length);
+			symbol.color = pointData.perm[i].color
+			symbol.style = pointData.perm[i].style
+			symbol.info = pointData.perm[i].info
 			
 			//Skapa polyline
 			var poly = new esri.geometry.Polyline();

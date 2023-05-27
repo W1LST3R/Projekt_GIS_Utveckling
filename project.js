@@ -1205,9 +1205,6 @@ function filterPoi(obj) {
         led.value = "Välj en led";
         distance.value = "";
     }
-
-    poiLayer = new esri.layers.GraphicsLayer();
-    map.addLayer(poiLayer);
 }
 
 function filtrate(){

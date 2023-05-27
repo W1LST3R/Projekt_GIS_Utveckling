@@ -54,7 +54,7 @@ när man skapar permanent punkt men inte väljer någon info så händer det ing
 
 när man har filtrerat och sen skapar nya markörer så kan man inte hovra på dem. löst
 
-fixa så att leder från firebase får rätt längd
+fixa så att leder från firebase får rätt längd /löst
 
 filtrering tar inte bort de två sista punkterna som är skapde under aktuell session. löst
 

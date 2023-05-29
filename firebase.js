@@ -21,13 +21,9 @@ const colRefPoi = collection(db,"poiDataPerm")
 const colRefTra = collection(db,"trailDataPerm")
 const colRefTraInfo = collection(db,"trailDataPermInfo")
 const colRefCat = collection(db,"categoryDataPerm")
-/*const dataToAdd = getPermData();
-console.log(dataToAdd);*/
-//const permPoiDataGet = await 
 var pois = [];
 var trails = [];
 var categorys = [];
-var trailsInfo = [];
 
 await getDocs(colRefPoi)
   .then((snapshot)=>{
@@ -84,4 +80,3 @@ export function addPermCat(dataToAdd){
   addDoc(collection(db,"categoryDataPerm"),dataToAdd
   );
 }
-

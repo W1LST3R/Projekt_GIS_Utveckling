@@ -293,12 +293,6 @@ function(Map, GraphicsLayer, InfoTemplate, Point, PictureMarkerSymbol, Graphic, 
 			myTrailLayer.add(graphic);
 			myTrailArr.push(myTrailLayer);
 		}
-		/* //Måste fixa denna, funkar endast så fort man själv skapar ett eget grafiskt objekt på kartan
-		On("load", function(){
-			map.graphics.enableMouseEvents();
-			map.graphics.on("mouse-out", removeHighlight);
-		});
-		*/
 	});
 	
 		pointLayer = new esri.layers.GraphicsLayer();
@@ -435,32 +429,7 @@ function getPointData() {
 	makePOIs(pois);
 	makeCategory(category);
 }
-/*
-//För punkter
-function makePoint(pointData) {
-	poiLayer = new esri.layers.GraphicsLayer();
-	map.addLayer(poiLayer);
-	
-	let testCount = 1;
-	let color = colorArr.pop();
 
-	dojo.forEach(pointData.posts, function(poi) {
-		var lng = poi.lon;
-		var lat = poi.lat;
-		var name = poi.name;
-		
-		var point = new esri.geometry.Point(lng, lat);
-		var SimpleMarkerSymbol = new esri.symbol.SimpleMarkerSymbol();
-		SimpleMarkerSymbol.color = randomColor();
-		SimpleMarkerSymbol.style = "triangle";
-		SimpleMarkerSymbol.size = 14;
-		
-		var graphic = new esri.Graphic(point, SimpleMarkerSymbol).setInfoTemplate(new esri.InfoTemplate(testCount, lng + ", " +lat));
-		poiLayer.add(graphic);
-		testCount++;
-	});
-}
-*/
 //För linjer/leder
 function makeLine(pointData) {
 	if(pointData.perm==undefined){
@@ -504,8 +473,6 @@ function makeLine(pointData) {
 		symbol.name = name;
 		symbol.distance = Number(length);
 		
-		
-		
 		//Style for biking and walking trails
 		if(trailIndex==0) {
 			symbol.color = "rgba(78,123,212,0.8)";
@@ -522,7 +489,6 @@ function makeLine(pointData) {
 			symbol.style = "solid";
 		}
 		
-
 		//Skapa det grafiska objektet med polyline och symbolen
 		var graphic = new esri.Graphic(poly, symbol);
 		graphic.id = count++;
@@ -677,9 +643,7 @@ function populateTrailFiltration() {
 	for(let i = 0; i < markers.length; i++) {
 		var index = 0;
         markers[i].forEach((graphic)=>{
-            
-            //const id = graphic.id; 
-
+           
             const label = document.createElement('label');
             label.setAttribute("for", graphic.symbol.name);
            
@@ -1252,17 +1216,6 @@ function doBuffer(distance) {
 }
 
 function showBuffer(geometries) {
-	/*
-    var symbol = new esri.symbol.SimpleFillSymbol(
-    esri.symbol.SimpleFillSymbol.STYLE_SOLID,
-        new esri.symbol.SimpleLineSymbol(
-            esri.symbol.SimpleLineSymbol.STYLE_SOLID,
-            new dojo.Color([0,0,255,0.65]), 2
-        ),
-      new dojo.Color([0,0,255,0.35])
-    );
-	*/
-	
 	let i = 0;
 	let index = 0;
 	

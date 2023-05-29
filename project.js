@@ -1108,13 +1108,8 @@ function makeThisTrail() {
 
 	if(document.querySelector("#permTra").checked){
 		permFun.addPermTra(permTraData)
-		permTra=[];
-		permTraData={};
+		
 
-	}else{
-		if(document.querySelector("#tempTra").checked){
-			permTraData={};
-		}
 	}
 	markers[index].push(graphic);
 	pointLayer.add(markers[index][markers[index].length-1]);
@@ -1124,6 +1119,8 @@ function makeThisTrail() {
 	}
 	myTrailArr = [];
 	myTrailPath = [];
+	permTra=[];
+	permTraData={};
 
 	makeTrail();
 	populateTrailFiltration();

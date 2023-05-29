@@ -80,3 +80,4 @@ export function addPermCat(dataToAdd){
   addDoc(collection(db,"categoryDataPerm"),dataToAdd
   );
 }
+
